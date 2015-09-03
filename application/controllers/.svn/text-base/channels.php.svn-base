@@ -1,0 +1,335 @@
+<?php
+
+class Channels extends CI_Controller {
+
+	function __construct() {
+		parent::__construct();
+
+		// Load the necessary stuff...
+		$this -> load -> helper(array('language', 'url', 'form', 'account/ssl'));
+		$this -> load -> library(array('account/authentication', 'pagination'));
+		$this -> load -> model(array('account/account_model', 'channel_model', 'schedule_model', 'favorites_model', 'user_model'));
+		$this -> lang -> load(array('general'));
+	}
+
+	function index() {
+		
+		$config['base_url'] = 'index.php/channels/';
+		$config['per_page'] = 24;
+		$config['num_links'] = 10;
+		$config['full_tag_open'] = '<div class="channels_navigation_contanier">';
+		$config['full_tag_close'] = '</div>';
+		$config['cur_tag_open'] = '<a class="selected">';
+		$config['cur_tag_close'] = '</a>';
+		$config['uri_segment'] = 2;
+
+		if (is_numeric($this -> uri -> segment(2)) || !($this -> uri -> segment(2))) {
+			$data['records'] = $this -> channel_model -> getP($config['per_page'], $this -> uri -> segment(2));
+			$config['total_rows'] = $this -> channel_model -> countAllShown();
+		} else {
+			$filter = $this -> uri -> segment(3);
+			$config['uri_segment'] = 4;
+			$config['base_url'] = 'index.php/channels/filter/' . $this -> uri -> segment(3);
+			echo $config['total_rows'] = $this -> channel_model -> countAll_filter($filter);
+			$data['records'] = $this -> channel_model -> get_filter($filter, $config['per_page'], $this -> uri -> segment(4));
+		}
+		foreach ($data['records'] as $record) {
+		
+			if (!empty($record -> logo) && !file_exists('uploads/channels/115/' . $record -> id . '.jpg')) {
+				list($width, $height, $type, $attr) = getimagesize($record -> logo);
+				$this -> load -> library('image_lib');
+				$config['image_library'] = 'gd2';
+				$config['source_image'] = $record -> logo;
+				$config['maintain_ratio'] = FALSE;
+				$config['new_image'] = 'uploads/channels/115/' . $record -> id . '.jpg';
+				if ($width > $height) {
+					$config['width'] = 115;
+					$config['height'] = round((115 / $width) * $height);
+				} else {
+					$config['height'] = 100;
+					$config['width'] = round((100 / $height) * $width);
+				}
+
+				$this -> image_lib -> initialize($config);
+				$this -> image_lib -> resize();
+				$this -> image_lib -> clear();
+			}
+		}
+
+		$data['channels'] = $this -> channel_model -> getAll();
+		$data['title'] = "جميع القنوات";
+		$data['tweet_url'] = site_url('channels');
+		$this -> pagination -> initialize($config);
+		
+		$this -> load -> view('channels_list', $data);
+	}
+
+	function search() {
+		$q = strtolower($_GET["term"]);
+		$results = $this -> channel_model -> search3($q);
+
+		$toReturn = array();
+		foreach ($results as $result) {
+			$toReturn[] = array($result -> slug, $result -> title);
+		}
+		echo json_encode($toReturn);
+	}
+
+	function view() {
+		$userid = $this -> session -> userdata('account_id');
+		$user_zone = $this -> session -> userdata('user_timezone');
+
+		$offset = 2 * 60 * 60;
+
+		$local = $this -> session -> userdata('localization');
+		if ($local != NULL) {
+			$offset = $local * 60 * 60;
+		} else if (!empty($user_zone)) {
+			$dtz = new DateTimeZone($user_zone);
+			$time = new DateTime('now', $dtz);
+			$offset = $dtz -> getOffset($time);
+		}
+		$result = $this -> channel_model -> get_slug($this -> uri -> segment(2));
+		$channelid = $result[0]->id;
+
+		$this -> session -> set_userdata('channel_id', $channelid);
+		 
+		$data['records'] = $this -> channel_model -> get_id($channelid);
+		
+		date_default_timezone_set('Etc/GMT');
+		// this has been added
+		$cur_date = date('d-m-Y', time() + $offset);
+		$cur_day = date('w', time() + $offset);
+		$cur_time = date('H:i', time() + $offset);
+
+		$data['cur_time'] = $cur_time;
+		$data['weekdays'] = array();
+		$data['dates'] = array();
+		for ($i = 0; $i < 7; $i++) {
+			if ($i == 0) {
+				$data['weekdays'][$i] = $cur_day + $i;
+				$data['dates'][$i] = $cur_date;
+			} elseif ($i < 7 - $cur_day) {
+				$dateunix = strtotime('+' . $i . ' day', strtotime($cur_date));
+				$data['dates'][$i] = date('d-m-Y', $dateunix);
+				$data['weekdays'][$i] = $cur_day + $i;
+			} else {
+				$dateunix = strtotime('+' . $i . ' day', strtotime($cur_date));
+				$data['dates'][$i] = date('d-m-Y', $dateunix);
+				$data['weekdays'][$i] = $i - 7 + $cur_day;
+			}
+		}
+		
+		foreach ($data['records'] as $record) {
+			if (!empty($record -> logo) && !file_exists('uploads/channels/89/' . $record -> id . '.jpg')) {
+				list($width, $height, $type, $attr) = getimagesize($record -> logo);
+
+				$config['image_library'] = 'gd2';
+				$config['source_image'] = $record -> logo;
+				$config['maintain_ratio'] = FALSE;
+
+				$config['new_image'] = 'uploads/channels/89/' . $record -> id . '.jpg';
+				if ($width > $height) {
+					$config['width'] = 89;
+					$config['height'] = round((89 / $width) * $height);
+				} else {
+					$config['height'] = 89;
+					$config['width'] = round((89 / $height) * $width);
+				}
+
+				$this -> load -> library('image_lib', $config);
+
+				$this -> image_lib -> resize();
+			}
+		}
+
+		$data['tweet_url'] = site_url('channels/' . $this -> uri -> segment(2));
+		$data['title'] = "جدول قناة " . $data['records'][0] -> title;
+		//print_r($data);die;
+		$this -> load -> view('tv_schedule', $data);
+	}
+
+	function channel_content() {
+		$userid = $this -> session -> userdata('account_id');
+		$user_zone = $this -> session -> userdata('user_timezone');
+		
+		if (!empty($_POST['channel'])) {
+			$channelid = $_POST['channel'];
+		} else {
+			$channelid = $this -> uri -> segment(3);
+		}
+		
+		date_default_timezone_set('Etc/GMT');
+		$offset = 2 * 60 * 60;
+
+		$local = $this -> session -> userdata('localization');
+		if ($local != NULL) {
+			$offset = $local * 60 * 60;
+		} else if (!empty($user_zone)) {
+			$dtz = new DateTimeZone($user_zone);
+			$time = new DateTime('now', $dtz);
+			$offset = $dtz -> getOffset($time);
+		}
+
+		if (!empty($_POST['date'])) {
+			$date = $_POST['date'] . " 00:00:00";
+			$data['today'] = (strtotime($date) == strtotime(date('Y-m-j', time() + $offset))) ? true : false;
+			
+			$date= date('Y-m-j',strtotime($_POST['date']));
+		} else {
+			$data['today'] = true;
+			$date = date('Y-m-j', time() + $offset);
+		}
+
+		$cur_time = date('H:i', time() + $offset);
+		$data['cur_time'] = $cur_time;
+		
+		$temp = $this -> channel_model -> get_id($channelid);
+		foreach ($temp as $row) {
+			
+			if($row->offset!=0)
+			{
+				$channelid = $row->original_id;
+				$offset = $offset + ($row->offset *60*60);
+			}
+			
+			if($row->is_hd==1)
+			{
+				$channelid = $row->original_id;
+			}
+			
+			
+		}
+		$data['listings'] = $this -> schedule_model -> get_byChannel($channelid, $date, $offset);
+		$sort_array = array();
+		
+		foreach ($data['listings'] as $record) {
+			$record -> starttime = date('H:i', strtotime($record -> starttime) + $offset);
+			$record -> endtime = date('H:i', strtotime($record -> endtime) + $offset);
+			$sort_array[] = $record -> starttime;
+			if (!empty($record -> poster) && !file_exists('uploads/listings/98/' . $record -> listing_id . '.jpg')) {
+				list($width, $height, $type, $attr) = getimagesize($record -> poster);
+				$this -> load -> library('image_lib');
+				$config['image_library'] = 'gd2';
+				$config['source_image'] = $record -> poster;
+				$config['maintain_ratio'] = TRUE;
+				$config['new_image'] = 'uploads/listings/98/' . $record -> listing_id . '.jpg';
+
+				if ($width > $height) {
+					$config['height'] = 82;
+					$config['x_axis'] = '0';
+					$config['y_axis'] = '0';
+					$config['width'] = round((82 / $height) * $width);
+				} else {
+					$config['width'] = 98;
+					$config['x_axis'] = '0';
+					$config['y_axis'] = '0';
+					$config['height'] = round((98 / $width) * $height);
+				}
+
+				$this -> image_lib -> initialize($config);
+				$this -> image_lib -> resize();
+				$config['source_image'] = 'uploads/listings/98/' . $record -> listing_id . '.jpg';
+				$config['new_image'] = 'uploads/listings/98/' . $record -> listing_id . '.jpg';
+				$this -> image_lib -> clear();
+			}
+		}
+
+		array_multisort($sort_array, $data['listings']);
+		
+		////// Checking Spaces ////////
+		/*
+		$counter = count($data['listings'])-1;
+		$spaces = array();
+		
+		for($i=0; $i<count($data['listings']); $i++) {
+				
+			if($i == 0)  // First Listing
+			{
+				$last_date = date('Y-m-d',time()-(24*60*60));	
+				$last_list = $this -> schedule_model -> get_byChannel($channelid, $last_date, $offset);	
+				$last_list = $last_list[count($last_list)-1];	
+				$final_endtime = '00:00';
+				
+				if($last_list ->nextday == 1)  /// Continuing Listing from previous day
+				{	
+					$new_list = new stdClass();	
+					$new_list -> starttime = $last_list -> endtime;
+					$new_list -> endtime = $data['listings'][$i] -> starttime;
+					$new_list -> empty = '1';
+					$new_list -> id = $last_list -> id;
+					$sort_array[] =	$new_list -> starttime;
+					$spaces[] = $new_list;
+					
+					$final_endtime = $new_list -> endtime;
+					
+				}
+				
+				if($data['listings'][0] -> starttime != $final_endtime)  /// A space before the first listing even if listing from previous day continues
+				{	
+					$new_list = new stdClass();	
+					$new_list -> starttime = $final_endtime;
+					$new_list -> endtime = $data['listings'][0] -> starttime;
+					$new_list -> empty = '1';
+					$sort_array[] =	$new_list -> starttime;
+					$spaces[] = $new_list;
+					
+				}
+			}
+			
+			 if($i == $counter)  //// Last Listing
+			{
+				$st_time = strtotime($data['listings'][count($data['listings'])-1] -> starttime);
+				$end_time = strtotime($data['listings'][count($data['listings'])-1] -> endtime);	
+				
+				$curr_date = date('Y-m-d',time());
+				$next_date = date('Y-m-d',time()+(24*60*60));
+				
+				if($st_time>$end_time)
+				$nextday = 1;
+				
+				else $nextday = 0;
+				
+				if(($nextday == 0) && ($data['listings'][count($data['listings'])-1] -> endtime != '00:00'))
+					{
+						$new_list = new stdClass();	
+						$new_list -> startdate = $curr_date;
+						$new_list -> enddate = $curr_date;
+						$new_list -> starttime = $data['listings'][$i] -> endtime;
+						$new_list -> endtime = '00:00';
+						$new_list -> empty = '1';
+						$sort_array[] =	$new_list -> starttime;
+						$spaces[] = $new_list;
+					}
+			}
+			
+			else
+				{
+					if(isset($data['listings'][$i+1]))	
+					if($data['listings'][$i] -> endtime != $data['listings'][$i+1] -> starttime)
+					{
+						$new_list = new stdClass();	
+						$new_list -> starttime = $data['listings'][$i] -> endtime;
+						$new_list -> endtime = $data['listings'][$i+1] -> starttime;
+						$new_list -> empty = '1';
+						$sort_array[] =	$new_list -> starttime;
+						$spaces[]  = $new_list;
+					}	
+					
+				}
+		}
+
+		foreach ($spaces as $key ) {
+			
+			$data['listings'][] = $key;
+		}
+		array_multisort($sort_array, $data['listings']);
+		 */
+		$data['favorites'] = array();
+		$query = $this -> favorites_model -> get_user($userid);
+		foreach ($query as $q) {
+			$data['favorites'][] = $q -> listing_id;
+		}
+		$this -> load -> view('channel_schedule', $data);
+	}
+}

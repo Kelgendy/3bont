@@ -1,0 +1,335 @@
+<?php
+
+class Schedule extends CI_Controller {
+
+	function __construct() {
+		parent::__construct();
+
+		// Load the necessary stuff...
+		$this -> load -> helper(array('language', 'url', 'form', 'account/ssl'));
+		$this -> load -> library(array('account/authentication'));
+		$this -> load -> model(array('account/account_model', 'channel_model', 'listing_model', 'schedule_model'));
+		$this -> lang -> load(array('general'));
+	}
+
+	function index() {
+
+		//offset initialization
+		$user_zone = $this -> session -> userdata('user_timezone');
+		$offset = 2 * 60 * 60;
+
+		$local = $this -> session -> userdata('localization');
+		if ($local != NULL) {
+			$offset = $local * 60 * 60;
+		} else if (!empty($user_zone)) {
+			$dtz = new DateTimeZone($user_zone);
+			$time = new DateTime('now', $dtz);
+			$offset = $dtz -> getOffset($time);
+		}
+		$data['offset'] = $offset;
+		date_default_timezone_set('Etc/GMT');
+		$data['cur_date'] = time() + $offset;
+
+		$data['title'] = "الجدول الكامل";
+		$this -> load -> view('TV_Listing', $data);
+	}
+
+	function content() {
+		//offset initialization
+		$user_zone = $this -> session -> userdata('user_timezone');
+		$offset = 2 * 60 * 60;
+		date_default_timezone_set('Etc/GMT');
+		$local = $this -> session -> userdata('localization');
+		if ($local != NULL) {
+			$offset = $local * 60 * 60;
+		} else if (!empty($user_zone)) {
+			$dtz = new DateTimeZone($user_zone);
+			$time = new DateTime('now', $dtz);
+			$offset = $dtz -> getOffset($time);
+		}
+		$data['offset'] = $offset;
+
+		// this has been added
+		$data['cur_date'] = time() + $offset;
+		//starting the counter
+		if (isset($_POST['count'])) {
+			$count = $_POST['count'];
+			$data['counter'] = $_POST['count'];
+		} else {
+			$count = 0;
+			$data['counter'] = 0;
+		}
+
+		$now = date('H:00', $data['cur_date'] + ($count * 60 * 60));
+		$now_date = date('Y-m-d H:00', $data['cur_date'] + ($count * 60 * 60));
+		$data['cur_date1'] = $now_date;
+
+		//*get channels*/
+		$data['channels'] = $this -> channel_model -> getAllOrdered();
+		$data['schedules'] = array();
+		$date = date('Y-m-d', $data['cur_date'] + ($count * 60 * 60));
+		$next_date = date('Y-m-d', $data['cur_date'] + ($count * 60 * 60) + (24 * 60 * 60));
+		$prev_date = date('Y-m-d', $data['cur_date'] + ($count * 60 * 60) - (24 * 60 * 60));
+		$end_range = date('Y-m-d H:i', strtotime($now_date) + 5 * 60 * 60);
+		
+		$offset2 = $offset;
+		foreach ($data['channels'] as $channel) {
+			
+			$offset = $offset2;	
+			$channelid = $channel->id;	
+			$temp = $this -> channel_model -> get_id($channelid);
+				foreach ($temp as $row) {
+			
+				if($row->offset!=0)
+				{
+					$channelid = $row->original_id;
+					$offset = $offset + ($row->offset *60*60);
+				}
+				
+				if($row->is_hd==1)
+				{
+					$channelid = $row->original_id;
+				}
+				
+			}	
+			$today = $this -> schedule_model -> get_byChannel_fullSchedule($channelid, $now_date, $end_range, $offset);
+			
+			$day_offset = ($offset >= 0) ? ceil($offset / (24 * 60 * 60)) : floor($offset / (24 * 60 * 60));
+
+			$sort_array = array();
+			$i = 0;
+
+			for ($j = 0; $j < sizeof($today); $j++) {
+				$end_day = date('Y-m-d', strtotime($today[$j] -> startdate . '' . $today[$j] -> endtime) + $offset);
+
+				if (date('Y-m-d', strtotime($end_range)) != date('Y-m-d', strtotime($now_date))) {
+					if ($today[$j] -> starttime > date('H:i', strtotime($end_range))) {
+						$today[$j] -> real_startdate = date('Y-m-d', strtotime($now_date));
+						if ($today[$j] -> endtime < $today[$j] -> starttime) {
+							$today[$j] -> real_enddate = date('Y-m-d', strtotime($end_range));
+						} else {
+							$today[$j] -> real_enddate = date('Y-m-d', strtotime($now_date));
+						}
+
+					} else {
+						$today[$j] -> real_startdate = date('Y-m-d', strtotime($end_range));
+						$today[$j] -> real_enddate = date('Y-m-d', strtotime($end_range));
+					}
+
+				} else {
+					$today[$j] -> real_startdate = date('Y-m-d', strtotime($now_date));
+
+					if ($end_day != date('Y-m-d', strtotime($today[$j] -> startdate . '' . $today[$j] -> endtime)))
+						$today[$j] -> real_enddate = date('Y-m-d', strtotime($prev_date));
+					else {
+						$today[$j] -> real_enddate = date('Y-m-d', strtotime($now_date));
+					}
+
+					if ($today[$j] -> starttime > date('H:i', strtotime($end_range))) {
+						$today[$j] -> real_startdate = $prev_date;
+					}
+				}
+			}
+
+			$data['schedules'][$channel -> id] = $today;
+			//print_r($data['schedules']);die;
+			foreach ($data['schedules'][$channel->id] as $listing) {
+				
+				$start = date('Y-m-d H:i', strtotime($listing -> real_startdate . '' . $listing -> starttime) + $offset);
+				$end = date('Y-m-d H:i', strtotime($listing -> real_enddate . '' . $listing -> endtime) + $offset);
+				$duration = abs(strtotime($end) - strtotime($start)) / 60;
+				if ($end > $now_date || $start >= $now_date) {
+					$listing -> starttime = $start;
+					$listing -> endtime = $end;
+					$sort_array[] = $start;
+					if ($start < $now_date) {
+						$data['schedules'][$channel -> id][$i] -> duration = $duration - (strtotime($now_date) - strtotime($start)) / 60;
+					} else {
+						$data['schedules'][$channel -> id][$i] -> duration = $duration;
+					}
+				} else {
+					unset($data['schedules'][$channel -> id][$i]);
+				}
+				$i++;
+			}
+			array_multisort($sort_array, $data['schedules'][$channel -> id]);
+			if (!empty($channel -> logo) && !file_exists('uploads/channels/60/' . $channel -> id . '.jpg')) {
+				list($width, $height, $type, $attr) = getimagesize($channel -> logo);
+
+				$config['image_library'] = 'gd2';
+				$config['source_image'] = $channel -> logo;
+				$config['maintain_ratio'] = FALSE;
+
+				$config['new_image'] = 'uploads/channels/60/' . $channel -> id . '.jpg';
+				if ($width > $height) {
+					$config['width'] = 60;
+					$config['height'] = round((60 / $width) * $height);
+				} else {
+					$config['height'] = 60;
+					$config['width'] = round((60 / $height) * $width);
+				}
+
+				$this -> load -> library('image_lib', $config);
+				$this -> image_lib -> initialize($config);
+				$this -> image_lib -> resize();
+				$this -> image_lib -> clear();
+			}
+		}
+		$this -> load -> view('TV_Listing_sub', $data);
+	}
+
+	function recurringFixer1() {
+		$query = "SELECT * FROM dtv_schedule_repeat WHERE (enddate = '0000-00-00' OR enddate > '2012-10-21') AND group_id IS NULL GROUP BY listing_id, channel_id, startdate, starttime ORDER BY channel_id, listing_id";
+		$result = mysql_query($query);
+		$group_id = 1;
+		while($row = mysql_fetch_array($result)){
+			echo $row['channel_id']."\t\t".$row['listing_id']."\t\t".$row['startdate']."\t\t".$row['starttime']."\t\n";
+			
+			mysql_query("UPDATE dtv_schedule_repeat SET group_id = ".$group_id." WHERE listing_id = ".$row['listing_id']." AND channel_id = ".$row['channel_id']." AND startdate = '".$row['startdate']."' AND starttime = '".$row['starttime']."';");
+			$group_id ++;
+		}
+	}
+	
+	function recurringFixer2() {
+		$query = "SELECT *, count(id) AS number FROM dtv_schedule_repeat WHERE (enddate = '0000-00-00' OR enddate > '2012-10-21') GROUP BY listing_id, channel_id, startdate, starttime, day ORDER BY channel_id, listing_id";
+		$result = mysql_query($query);
+		echo mysql_num_rows($result)."\n";
+		while($row = mysql_fetch_array($result)){
+			if($row['number'] >= 2)	{
+				echo $row['channel_id']."\t\t".$row['listing_id']."\t\t".$row['startdate']."\t\t".$row['starttime']."\t\t".$row['day']."\t\t".$row['number']."\t\n";
+				mysql_query("DELETE FROM dtv_schedule_repeat WHERE listing_id = ".$row['listing_id']." AND channel_id = ".$row['channel_id']." AND startdate = '".$row['startdate']."' AND starttime = '".$row['starttime']."' AND day = ".$row['day']." LIMIT 1;");
+			}
+		}
+	}
+	
+	function listingFixer1(){
+		$query ="SELECT * FROM dtv_listing";
+		$result = mysql_query($query);
+		
+		while($row = mysql_fetch_array($result)){
+			echo $row['title']." ".$row['id']."<br/>";
+			mysql_query("UPDATE dtv_listing SET title = '".trim($row['title'])."' WHERE id = ".$row['id'].";");
+		}
+	}
+
+	function listingFixer2(){
+		$query ="SELECT *, COUNT(id) as number FROM dtv_listing GROUP BY title HAVING number > 1  ORDER BY number DESC ";
+		$result = mysql_query($query);
+		
+		while($row = mysql_fetch_array($result)){
+			echo "[".$row['id']."] ".$row['title']." ".$row['number']."<br/>";
+			$mergeId = $row['id'];
+			$mergePoster = "";
+			$query2 = 'SELECT * FROM dtv_listing WHERE title LIKE "'.$row['title'].'";';
+			//echo 'SELECT * FROM dtv_listing WHERE title LIKE "'.$row['title'].'";';
+			$result2 = mysql_query($query2);
+			
+			while($row2 = mysql_fetch_array($result2)){
+				echo "[".$row2['id']."] ".$row2['poster']."<br/>";
+				if(!empty($row2['poster'])){
+					$mergePoster = $row2['poster'];
+				}
+				
+				if($row2['id'] != $mergeId){
+					mysql_query("DELETE FROM dtv_listing WHERE id = ".$row2['id'].";");
+					mysql_query("UPDATE dtv_photos SET listing_id = ".$mergeId." WHERE listing_id = ".$row2['id'].";");
+					mysql_query("UPDATE dtv_videos SET listing_id = ".$mergeId." WHERE listing_id = ".$row2['id'].";");
+					mysql_query("UPDATE dtv_schedule_single SET listing_id = ".$mergeId." WHERE listing_id = ".$row2['id'].";");
+					mysql_query("UPDATE dtv_schedule_repeat SET listing_id = ".$mergeId." WHERE listing_id = ".$row2['id'].";");
+				}
+				
+				mysql_query("UPDATE dtv_listing SET poster = '".$mergePoster."' WHERE id = ".$mergeId.";");
+			}
+		}
+	}
+
+	function listingFixer3(){
+		$query ="SELECT *, COUNT(id) as number FROM dtv_listing GROUP BY slug HAVING number > 1  ORDER BY number DESC ";
+		$result = mysql_query($query);
+		
+		while($row = mysql_fetch_array($result)){
+			echo "[".$row['id']."] ".$row['title']." ".$row['slug']." ".$row['number']."<br/>";
+			
+			$query2 = 'SELECT * FROM dtv_listing WHERE slug LIKE "'.$row['slug'].'";';
+			
+			$result2 = mysql_query($query2);
+			$i = 1;
+			while($row2 = mysql_fetch_array($result2)){
+				if($i != 1){
+					mysql_query("UPDATE dtv_listing SET slug = '".$row['slug'].$i."' WHERE id = ".$row2['id'].";");
+				}
+				$i++;
+				
+			}
+		}
+	}
+	
+	function nullFixer(){
+		$query = "SELECT * FROM dtv_schedule_repeat WHERE group_id IS NULL GROUP BY listing_id, channel_id, startdate, starttime;";
+		
+		$result = mysql_query($query);
+		while($row = mysql_fetch_array($result)){
+			$group_id = $this -> schedule_model -> getMaxGroupId() + 1;
+			mysql_query("UPDATE dtv_schedule_repeat SET group_id=".$group_id." WHERE listing_id = ".$row['listing_id']." AND channel_id = ".$row['channel_id']." AND startdate = '".$row['startdate']."' AND starttime = '".$row['starttime']."';");
+		}
+	}
+
+	function getFB(){
+		$result = $this -> schedule_model -> getFb();
+		
+		foreach($result as $listing){
+			if (!empty($listing -> poster) && file_exists($listing -> poster) && !file_exists('uploads/listings/fb/' . $listing -> listing_id . '.jpg')) {
+				list($width, $height, $type, $attr) = getimagesize($listing -> poster);
+				$this -> load -> library('image_lib');
+				$config['image_library'] = 'gd2';
+				$config['source_image'] = $listing -> poster;
+				$config['maintain_ratio'] = FALSE;
+
+				$config['new_image'] = 'uploads/listings/fb/' . $listing -> listing_id . '.jpg';
+				if ($width < $height) {
+					$config['width'] = 177;
+					$config['height'] = round((177 / $width) * $height);
+				} else {
+					$config['height'] = 123;
+					$config['width'] = round((123 / $height) * $width);
+				}
+
+				$this -> image_lib -> initialize($config);
+				$this -> image_lib -> resize();
+				$this -> image_lib -> clear();
+				$listing->poster_img = 'uploads/listings/fb/' . $listing -> listing_id . '.jpg';
+			}else{
+				if(file_exists('uploads/listings/fb/' . $listing -> listing_id . '.jpg'))
+					$listing->poster_img = 'uploads/listings/fb/' . $listing -> listing_id . '.jpg';
+				else
+					$listing->poster_img = 'resource/img/size2.png';
+			}
+			
+			$listing->start_time = date('h:i A', strtotime($listing->start_time));
+			$listing->end_time = date('h:i A', strtotime($listing->end_time));
+			$listing->date = date('d-m-Y');
+			
+			switch($listing->category){
+				case 1:
+					$listing->cat = "برامج";
+					break;
+				case 2:
+					$listing->cat = "أفلام";
+					break;
+				case 3:
+					$listing->cat = "مسلسلات";
+					break;
+				case 4:
+					$listing->cat = "مسرحيات";
+					break;
+				case 5:	
+					$listing->cat = "رياضة";
+					break;
+				default:
+					break;
+			}
+		}
+		
+		echo json_encode($result);
+	}
+}

@@ -1,0 +1,41 @@
+
+  
+// Slider and fancyBox Calls
+$(window).load(function() {
+
+		// Set custom style, close if clicked, change title type and overlay color
+	$(".details").fancybox({
+			width: 700,
+			height: 430,
+			type: 'iframe',
+			autoScale:false,
+			autoSize: false,
+			scrolling: 'no',
+			fitToView: false,
+			padding : 5,
+			openEffect: 'fade',
+			closeEffect: 'fade'
+		});
+
+	$(".fancybox").fancybox({
+			openEffect: 'elastic',
+			closeEffect: 'elastic',
+			helpers : {
+				media : {}
+			}
+		});
+		
+	$(".videogal").fancybox({
+			maxWidth	: 800,
+			maxHeight	: 600,
+			fitToView	: false,
+			width		: '70%',
+			height		: '70%',
+			autoSize	: false,
+			closeClick	: false,
+			openEffect	: 'none',
+			closeEffect	: 'none'
+		});
+
+    });	
+

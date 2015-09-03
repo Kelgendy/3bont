@@ -1,0 +1,84 @@
+	var currentRating = <?= $user_review != false ? $user_review->value : "0"?>;
+	var currentClass = "<?= $user_review != false ? "rate".$user_review->value : "rate0"?>";
+	var rating = '';
+	var value = '';
+	$(document).ready(function() {
+		
+		$('.rating1').siblings(':last').addClass(currentClass);
+		$('.rating1').siblings('span').html(currentRating);
+			
+		$('.rating1, .rating2, .rating3, .rating4, .rating5, .rating6, .rating7, .rating8, .rating9, .rating10').mouseout(function(){
+			$(this).siblings(':last').removeClass();
+			$(this).siblings(':last').addClass(currentClass);
+			$(this).siblings('span').html(currentRating);
+		});
+		
+		$('.rating1, .rating2, .rating3, .rating4, .rating5, .rating6, .rating7, .rating8, .rating9, .rating10').mouseover(function(){
+			var rating = $(this).attr('class');
+			var value = rating.substring(6);
+			
+			$(this).siblings(':last').removeClass();
+			$(this).siblings(':last').addClass('rate'+value);
+			$(this).siblings('span').html(value);
+		});
+		<? if($this -> session -> userdata('account_id') !== FALSE) { ?>
+			$('.rating1, .rating2, .rating3, .rating4, .rating5, .rating6, .rating7, .rating8, .rating9, .rating10').click(function(){
+			rating = $(this).attr('class');
+			value = rating.substring(6);
+			
+			$.ajax({
+				url: '<?=site_url('rating/add') ?>
+				',
+				type: "GET",
+				data: {id: <?=$listing[0]->id?>, val: value},
+				success:function(response){
+					$(this).siblings(':last').removeClass();
+					currentRating = value;
+					currentClass = "rate"+value;
+					$(this).siblings(':last').addClass(currentClass);
+					$(this).siblings('span').html(currentRating);
+				},
+				error:function (xhr, textStatus, thrownError){
+					alert("xhr status: " + xhr.statusText);
+				},
+			});
+		});
+			
+		<? } else { ?>
+			$('.rating1, .rating2, .rating3, .rating4, .rating5, .rating6, .rating7, .rating8, .rating9, .rating10').fancybox({
+				height :150,
+				width: 500,
+				autoSize: false,
+				wrapCSS    : 'daleelak_modal',
+				closeClick : true,
+				href: '#modal',
+				helpers : {
+					title : {
+						type : 'inside'
+					}
+				}
+			});
+			
+			$('.rating1, .rating2, .rating3, .rating4, .rating5, .rating6, .rating7, .rating8, .rating9, .rating10').click(function(){
+			
+			rating = $(this).attr('class');
+			value = rating.substring(6);
+			
+			var listing = $(this).parent().attr('id');
+			listing = listing.substring(7);
+			
+			$.ajax({
+				url: '<?=site_url('rating/session') ?>
+				',
+				type: "GET",
+				data: {value: value, listing: listing},
+				success:function(response){
+					console.log(response);
+				},
+				error:function (xhr, textStatus, thrownError){
+					alert("xhr status: " + xhr.statusText);
+				},
+			});
+		});	
+		<? } ?>
+		

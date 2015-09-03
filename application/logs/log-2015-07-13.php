@@ -1,0 +1,23 @@
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
+
+ERROR - 2015-07-13 12:11:21 --> 404 Page Not Found --> 
+ERROR - 2015-07-13 12:11:28 --> Severity: 8192  --> mysql_connect(): The mysql extension is deprecated and will be removed in the future: use mysqli or PDO instead /Applications/XAMPP/xamppfiles/htdocs/3bont/system/database/drivers/mysql/mysql_driver.php 70
+ERROR - 2015-07-13 12:11:28 --> The session cookie data did not match what was expected. This could be a possible hacking attempt.
+ERROR - 2015-07-13 12:11:28 --> Severity: Notice  --> Undefined index: offset /Applications/XAMPP/xamppfiles/htdocs/3bont/application/controllers/latest_news.php 58
+ERROR - 2015-07-13 12:12:14 --> Severity: 8192  --> mysql_connect(): The mysql extension is deprecated and will be removed in the future: use mysqli or PDO instead /Applications/XAMPP/xamppfiles/htdocs/3bont/system/database/drivers/mysql/mysql_driver.php 70
+ERROR - 2015-07-13 12:12:43 --> Severity: 8192  --> mysql_connect(): The mysql extension is deprecated and will be removed in the future: use mysqli or PDO instead /Applications/XAMPP/xamppfiles/htdocs/3bont/system/database/drivers/mysql/mysql_driver.php 70
+ERROR - 2015-07-13 12:27:10 --> Severity: 8192  --> mysql_connect(): The mysql extension is deprecated and will be removed in the future: use mysqli or PDO instead /Applications/XAMPP/xamppfiles/htdocs/3bont/system/database/drivers/mysql/mysql_driver.php 70
+ERROR - 2015-07-13 12:27:10 --> 404 Page Not Found --> 
+ERROR - 2015-07-13 12:27:10 --> 404 Page Not Found --> 
+ERROR - 2015-07-13 12:30:10 --> Severity: 8192  --> mysql_connect(): The mysql extension is deprecated and will be removed in the future: use mysqli or PDO instead /Applications/XAMPP/xamppfiles/htdocs/3bont/system/database/drivers/mysql/mysql_driver.php 70
+ERROR - 2015-07-13 12:30:12 --> Severity: 8192  --> mysql_connect(): The mysql extension is deprecated and will be removed in the future: use mysqli or PDO instead /Applications/XAMPP/xamppfiles/htdocs/3bont/system/database/drivers/mysql/mysql_driver.php 70
+ERROR - 2015-07-13 12:30:13 --> Severity: 8192  --> mysql_connect(): The mysql extension is deprecated and will be removed in the future: use mysqli or PDO instead /Applications/XAMPP/xamppfiles/htdocs/3bont/system/database/drivers/mysql/mysql_driver.php 70
+ERROR - 2015-07-13 12:30:21 --> Severity: 8192  --> mysql_connect(): The mysql extension is deprecated and will be removed in the future: use mysqli or PDO instead /Applications/XAMPP/xamppfiles/htdocs/3bont/system/database/drivers/mysql/mysql_driver.php 70
+ERROR - 2015-07-13 12:31:28 --> Severity: 8192  --> mysql_connect(): The mysql extension is deprecated and will be removed in the future: use mysqli or PDO instead /Applications/XAMPP/xamppfiles/htdocs/3bont/system/database/drivers/mysql/mysql_driver.php 70
+ERROR - 2015-07-13 12:31:46 --> Severity: 8192  --> mysql_connect(): The mysql extension is deprecated and will be removed in the future: use mysqli or PDO instead /Applications/XAMPP/xamppfiles/htdocs/3bont/system/database/drivers/mysql/mysql_driver.php 70
+ERROR - 2015-07-13 12:31:48 --> Severity: 8192  --> mysql_connect(): The mysql extension is deprecated and will be removed in the future: use mysqli or PDO instead /Applications/XAMPP/xamppfiles/htdocs/3bont/system/database/drivers/mysql/mysql_driver.php 70
+ERROR - 2015-07-13 12:32:02 --> Severity: 8192  --> mysql_connect(): The mysql extension is deprecated and will be removed in the future: use mysqli or PDO instead /Applications/XAMPP/xamppfiles/htdocs/3bont/system/database/drivers/mysql/mysql_driver.php 70
+ERROR - 2015-07-13 12:32:45 --> Severity: 8192  --> mysql_connect(): The mysql extension is deprecated and will be removed in the future: use mysqli or PDO instead /Applications/XAMPP/xamppfiles/htdocs/3bont/system/database/drivers/mysql/mysql_driver.php 70
+ERROR - 2015-07-13 12:32:47 --> Severity: 8192  --> mysql_connect(): The mysql extension is deprecated and will be removed in the future: use mysqli or PDO instead /Applications/XAMPP/xamppfiles/htdocs/3bont/system/database/drivers/mysql/mysql_driver.php 70
+ERROR - 2015-07-13 12:33:20 --> Severity: 8192  --> mysql_connect(): The mysql extension is deprecated and will be removed in the future: use mysqli or PDO instead /Applications/XAMPP/xamppfiles/htdocs/3bont/system/database/drivers/mysql/mysql_driver.php 70
+ERROR - 2015-07-13 12:33:21 --> Severity: 8192  --> mysql_connect(): The mysql extension is deprecated and will be removed in the future: use mysqli or PDO instead /Applications/XAMPP/xamppfiles/htdocs/3bont/system/database/drivers/mysql/mysql_driver.php 70

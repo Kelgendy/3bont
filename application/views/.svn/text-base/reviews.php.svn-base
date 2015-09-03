@@ -1,0 +1,33 @@
+<? include("header.php"); ?>
+ <div class="grid_24">
+  		<div class="page_title">تقييم <?=anchor("listings/".$records[0]->slug,$records[0]->title)?></div>    
+  </div><!-- end grid_24 -->
+  
+    <div class="grid_24">
+    	<?php foreach ($records as $record) {?>
+  		<div class="review_item">
+        	<span class="date"><?=date('d-m-Y',strtotime($record->date_time))?></span>
+			<div class="clear"></div>
+			<div class="rating_star"><?= $record->rating?></div>
+     		<span class="title"><?= $record->review_title?></span>
+     		<div class="author">
+             <?php if (!empty($record->profile)) : ?>
+          		<img style="width:25px; height:25px" src="<?php echo $record->profile; ?>" alt="" />
+        		<?php else : ?>
+           		<img style="width:25px; height:25px" src="resource/img/profile-img.jpg" alt="" />
+        	<?php endif; ?> 
+               <span class="added_by">بواسطة : <span><?= $record->username?></span></span>
+            </div>
+            <p><?= $record->review?></p>
+        </div>  
+        <?php }?>
+       
+    <!--pagination-->
+       <?php echo $this->pagination->create_links(); ?>
+  </div><!-- end grid_24 -->
+
+<div class="clear"></div>
+    
+</div>
+<!-- end .container_24 -->
+<? include("footer.php"); ?>

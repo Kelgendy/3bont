@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<title>Daleeak.tv</title>
+<link rel="stylesheet" href="css/reset_rtl.css" />
+<link rel="stylesheet" href="css/text_rtl.css" />
+<link rel="stylesheet" href="css/960_24_col_rtl.css" />
+<link rel="stylesheet" href="css/dropdowns.css" />
+<link href="css/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+<div class="container_24 inners_background gray">
+
+  <div class="grid_24" >
+  <div class="details_header">
+  		<div class="logo_home"><a href="#"></a></div>
+        <div class="controls_container inners" >	
+            	<div class="menu">
+                        <span><a href="#">الرئيسية</a></span>
+                        <span><a href="#">الجدول الكامل</a></span>
+                        <span><a href="#">القنوات</a></span>
+       	 		</div>
+                <div class="login">
+                	<a href="#"></a>
+                </div>
+                <div class="search">
+                	<a href="#"></a>
+                </div>
+                <div class="socialmedia">
+                	<a href="#" class="facebook" title="خليك معانا على الفيسبوك"></a>
+                    <a href="#" class="twitter" title="خليك معانا على تويتر"></a>
+                    <a href="#" class="youtube"  title="شاهدنا على اليوتيوب"></a>
+                </div>
+                <div class="clear"></div>
+                <div class="favorites_big"><a href="#"></a></div>
+                <div class="checkin_big"><a href="#"></a></div>
+                <div class="share"><img src="img/share.png"></div>
+        </div><!-- end controls container -->	
+  </div><!-- end header -->
+  </div><!-- end grid_24 -->
+  
+  <div class="grid_24">
+  		<div class="page_title">عنوان الصفحة</div>
+  </div>
+  
+  <div class="grid_24">
+  		<div class="tv_grid_filter">
+        	<span class="tl_corner"></span>
+            <span class="tr_corner"></span>
+        	<span class="title">بحـــث</span>
+            <form action="#" class="filter_form">
+            	<div class="field date">
+                	<label class="icon_label">التاريخ</label>
+                	<input type="text" class="txtbox" placeholder="اليوم" value=""/>
+                </div>
+                <div class="field time">
+                	<label class="icon_label">الوقت</label>
+                	<div class="dropdown">
+                        <h3><a href="#">جميع الأوقات</a></h3>
+                        <ul>
+                          <li><a href="#">أفلام</a></li>
+                          <li><a href="#">مسلسلات</a></li>
+                          <li><a href="#">مسرحيات</a></li>
+                          <li><a href="#">برامج</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="field channel">
+                	<span class="icon_label">القناة</span>
+                	<div class="dropdown">
+                        <h3><a href="#">جميع القنوات</a></h3>
+                        <ul>
+                          <li><a href="#">أفلام</a></li>
+                          <li><a href="#">مسلسلات</a></li>
+                          <li><a href="#">مسرحيات</a></li>
+                          <li><a href="#">برامج</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="field category">
+                	<span class="icon_label">التصنيف</span>
+                	<div class="showfilter">
+                        <h3><a href="#">---------</a></h3>
+                        <ul>
+                          <li class="aflam"><a href="#">أفلام</a></li>
+                          <li class="series"><a href="#">مسلسلات</a></li>
+                          <li class="plays"><a href="#">مسرحيات</a></li>
+                          <li class="programs"><a href="#">برامج</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="clear"></div>
+        <div class="tv_grid">
+        	<div class="tv_gird_header">
+            	<a href="#" class="left_arrow"></a>
+                <a href="#" class="right_arrow"></a>
+            	<ul class="hours">
+                    <li class="first"></li>
+                    <li>12:00 PM</li>
+                    <li>1:00 PM</li>
+                    <li>2:00 PM</li>
+                    <li>3:00 PM</li>
+                    <li>4:00 PM</li>
+                </ul>
+            </div>
+            <div class="clear"></div>
+            <div class="tv_grid_rows tvListing">
+            	<div class="tv_gird_row">
+            	<div class="tv_grid_channel">
+                	<a href="#"><img src="img/channel_logo60x26.jpg"/></a>
+                </div>
+                <div class="tv_grid_show" style="width: 155px;">
+                	<div class="show_details">
+                    	<span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                    	<span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                    	<div class="series"><span>مسلسلات</span></div>
+                    </div>
+                    <a href="#" class="channel_schedule_icon_grid"></a>
+                </div>
+                <div class="tv_grid_show odd_show" style="width: 310px;">
+                	<div class="show_details">
+                        <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                        <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                        <div class="aflam"><span>أفلام</span></div>
+                    </div>
+                    <a href="#" class="channel_schedule_icon_grid"></a>
+                </div>
+                 <div class="tv_grid_show">
+                 	<div class="show_details">
+                        <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                        <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                        <div class="series"><span>مسلسلات</span></div>
+                    </div>
+                    <a href="#" class="channel_schedule_icon_grid"></a>
+                </div>
+                <div class="tv_grid_show odd_show" style="width: 120px;">
+                	<div class="show_details">
+                        <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                        <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                        <div class="aflam"><span>أفلام</span></div>
+                    </div>
+                    <a href="#" class="channel_schedule_icon_grid"></a>
+                </div>
+                 <div class="tv_grid_show">
+                 	<div class="show_details">
+                        <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                        <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                        <div class="category series"><span>مسلسلات</span></div>
+                    </div>
+                    <a href="#" class="channel_schedule_icon_grid"></a>
+                </div>
+            <div class="clear"></div> 
+            </div>
+                <div class="tv_gird_row odd_row">
+                    <div class="tv_grid_channel">
+                        <a href="#"><img src="img/channel_logo60x26.jpg"/></a>
+                    </div>
+                    <div class="tv_grid_show" style="width: 155px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show odd_show">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show" style="width: 280px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show odd_show" style="width: 95px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show" style="width: 140px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="category series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                <div class="clear"></div> 
+                </div>
+                <div class="tv_gird_row">
+                    <div class="tv_grid_channel">
+                        <a href="#"><img src="img/channel_logo60x26.jpg"/></a>
+                    </div>
+                    <div class="tv_grid_show" style="width: 155px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show odd_show" style="width: 310px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show odd_show" style="width: 105px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="category series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                <div class="clear"></div> 
+                </div>
+                <div class="tv_gird_row odd_row">
+                    <div class="tv_grid_channel">
+                        <a href="#"><img src="img/channel_logo60x26.jpg"/></a>
+                    </div>
+                    <div class="tv_grid_show" style="width: 155px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show odd_show" style="width: 310px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show odd_show" style="width: 105px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="category series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                <div class="clear"></div> 
+                </div>
+                <div class="tv_gird_row">
+                    <div class="tv_grid_channel">
+                        <a href="#"><img src="img/channel_logo60x26.jpg"/></a>
+                    </div>
+                    <div class="tv_grid_show" style="width: 155px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show odd_show" style="width: 310px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show odd_show" style="width: 105px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="category series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                <div class="clear"></div> 
+                </div>
+                <div class="tv_gird_row">
+            	<div class="tv_grid_channel">
+                	<a href="#"><img src="img/channel_logo60x26.jpg"/></a>
+                </div>
+                <div class="tv_grid_show" style="width: 155px;">
+                	<div class="show_details">
+                    	<span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                    	<span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                    	<div class="series"><span>مسلسلات</span></div>
+                    </div>
+                    <a href="#" class="channel_schedule_icon_grid"></a>
+                </div>
+                <div class="tv_grid_show odd_show" style="width: 310px;">
+                	<div class="show_details">
+                        <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                        <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                        <div class="aflam"><span>أفلام</span></div>
+                    </div>
+                    <a href="#" class="channel_schedule_icon_grid"></a>
+                </div>
+                 <div class="tv_grid_show">
+                 	<div class="show_details">
+                        <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                        <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                        <div class="series"><span>مسلسلات</span></div>
+                    </div>
+                    <a href="#" class="channel_schedule_icon_grid"></a>
+                </div>
+                <div class="tv_grid_show odd_show" style="width: 120px;">
+                	<div class="show_details">
+                        <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                        <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                        <div class="aflam"><span>أفلام</span></div>
+                    </div>
+                    <a href="#" class="channel_schedule_icon_grid"></a>
+                </div>
+                 <div class="tv_grid_show">
+                 	<div class="show_details">
+                        <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                        <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                        <div class="category series"><span>مسلسلات</span></div>
+                    </div>
+                    <a href="#" class="channel_schedule_icon_grid"></a>
+                </div>
+            <div class="clear"></div> 
+            </div>
+                <div class="tv_gird_row odd_row">
+                    <div class="tv_grid_channel">
+                        <a href="#"><img src="img/channel_logo60x26.jpg"/></a>
+                    </div>
+                    <div class="tv_grid_show" style="width: 155px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show odd_show">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show" style="width: 280px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show odd_show" style="width: 95px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show" style="width: 140px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="category series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                <div class="clear"></div> 
+                </div>
+                <div class="tv_gird_row">
+                    <div class="tv_grid_channel">
+                        <a href="#"><img src="img/channel_logo60x26.jpg"/></a>
+                    </div>
+                    <div class="tv_grid_show" style="width: 155px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show odd_show" style="width: 310px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show odd_show" style="width: 105px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="category series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                <div class="clear"></div> 
+                </div>
+                <div class="tv_gird_row odd_row">
+                    <div class="tv_grid_channel">
+                        <a href="#"><img src="img/channel_logo60x26.jpg"/></a>
+                    </div>
+                    <div class="tv_grid_show" style="width: 155px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show odd_show" style="width: 310px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show odd_show" style="width: 105px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="category series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                <div class="clear"></div> 
+                </div>
+                <div class="tv_gird_row">
+            	<div class="tv_grid_channel">
+                	<a href="#"><img src="img/channel_logo60x26.jpg"/></a>
+                </div>
+                <div class="tv_grid_show" style="width: 155px;">
+                	<div class="show_details">
+                    	<span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                    	<span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                    	<div class="series"><span>مسلسلات</span></div>
+                    </div>
+                    <a href="#" class="channel_schedule_icon_grid"></a>
+                </div>
+                <div class="tv_grid_show odd_show" style="width: 310px;">
+                	<div class="show_details">
+                        <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                        <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                        <div class="aflam"><span>أفلام</span></div>
+                    </div>
+                    <a href="#" class="channel_schedule_icon_grid"></a>
+                </div>
+                 <div class="tv_grid_show">
+                 	<div class="show_details">
+                        <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                        <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                        <div class="series"><span>مسلسلات</span></div>
+                    </div>
+                    <a href="#" class="channel_schedule_icon_grid"></a>
+                </div>
+                <div class="tv_grid_show odd_show" style="width: 120px;">
+                	<div class="show_details">
+                        <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                        <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                        <div class="aflam"><span>أفلام</span></div>
+                    </div>
+                    <a href="#" class="channel_schedule_icon_grid"></a>
+                </div>
+                 <div class="tv_grid_show">
+                 	<div class="show_details">
+                        <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                        <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                        <div class="category series"><span>مسلسلات</span></div>
+                    </div>
+                    <a href="#" class="channel_schedule_icon_grid"></a>
+                </div>
+            <div class="clear"></div> 
+            </div>
+                <div class="tv_gird_row odd_row">
+                    <div class="tv_grid_channel">
+                        <a href="#"><img src="img/channel_logo60x26.jpg"/></a>
+                    </div>
+                    <div class="tv_grid_show" style="width: 155px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show odd_show">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show" style="width: 280px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show odd_show" style="width: 95px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show" style="width: 140px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="category series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                <div class="clear"></div> 
+                </div>
+                <div class="tv_gird_row">
+                    <div class="tv_grid_channel">
+                        <a href="#"><img src="img/channel_logo60x26.jpg"/></a>
+                    </div>
+                    <div class="tv_grid_show" style="width: 155px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show odd_show" style="width: 310px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show odd_show" style="width: 105px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="category series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                <div class="clear"></div> 
+                </div>
+                <div class="tv_gird_row odd_row">
+                    <div class="tv_grid_channel">
+                        <a href="#"><img src="img/channel_logo60x26.jpg"/></a>
+                    </div>
+                    <div class="tv_grid_show" style="width: 155px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show odd_show" style="width: 310px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show odd_show" style="width: 105px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="category series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                <div class="clear"></div> 
+                </div>
+                <div class="tv_gird_row">
+            	<div class="tv_grid_channel">
+                	<a href="#"><img src="img/channel_logo60x26.jpg"/></a>
+                </div>
+                <div class="tv_grid_show" style="width: 155px;">
+                	<div class="show_details">
+                    	<span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                    	<span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                    	<div class="series"><span>مسلسلات</span></div>
+                    </div>
+                    <a href="#" class="channel_schedule_icon_grid"></a>
+                </div>
+                <div class="tv_grid_show odd_show" style="width: 310px;">
+                	<div class="show_details">
+                        <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                        <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                        <div class="aflam"><span>أفلام</span></div>
+                    </div>
+                    <a href="#" class="channel_schedule_icon_grid"></a>
+                </div>
+                 <div class="tv_grid_show">
+                 	<div class="show_details">
+                        <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                        <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                        <div class="series"><span>مسلسلات</span></div>
+                    </div>
+                    <a href="#" class="channel_schedule_icon_grid"></a>
+                </div>
+                <div class="tv_grid_show odd_show" style="width: 120px;">
+                	<div class="show_details">
+                        <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                        <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                        <div class="aflam"><span>أفلام</span></div>
+                    </div>
+                    <a href="#" class="channel_schedule_icon_grid"></a>
+                </div>
+                 <div class="tv_grid_show">
+                 	<div class="show_details">
+                        <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                        <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                        <div class="category series"><span>مسلسلات</span></div>
+                    </div>
+                    <a href="#" class="channel_schedule_icon_grid"></a>
+                </div>
+            <div class="clear"></div> 
+            </div>
+                <div class="tv_gird_row odd_row">
+                    <div class="tv_grid_channel">
+                        <a href="#"><img src="img/channel_logo60x26.jpg"/></a>
+                    </div>
+                    <div class="tv_grid_show" style="width: 155px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show odd_show">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show" style="width: 280px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show odd_show" style="width: 95px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show" style="width: 140px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="category series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                <div class="clear"></div> 
+                </div>
+                <div class="tv_gird_row">
+                    <div class="tv_grid_channel">
+                        <a href="#"><img src="img/channel_logo60x26.jpg"/></a>
+                    </div>
+                    <div class="tv_grid_show" style="width: 155px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show odd_show" style="width: 310px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show odd_show" style="width: 105px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="category series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                <div class="clear"></div> 
+                </div>
+                <div class="tv_gird_row odd_row">
+                    <div class="tv_grid_channel">
+                        <a href="#"><img src="img/channel_logo60x26.jpg"/></a>
+                    </div>
+                    <div class="tv_grid_show" style="width: 155px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show odd_show" style="width: 310px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                    <div class="tv_grid_show odd_show" style="width: 105px;">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">السفارة فى العمارة</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 1:00 PM )</a></span>
+                            <div class="aflam"><span>أفلام</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                     <div class="tv_grid_show">
+                        <div class="show_details">
+                            <span class="tv_grid_show_name"><a href="#">آدم</a></span>
+                            <span class="tv_grid_show_time"><a href="#">( 12:00 PM )</a></span>
+                            <div class="category series"><span>مسلسلات</span></div>
+                        </div>
+                        <a href="#" class="channel_schedule_icon_grid"></a>
+                    </div>
+                <div class="clear"></div> 
+                </div>
+            </div>
+            <div class="tv_gird_header">
+            	<a href="#" class="left_arrow"></a>
+                <a href="#" class="right_arrow"></a>
+            	<ul class="hours">
+                    <li class="first"></li>
+                    <li>12:00 PM</li>
+                    <li>1:00 PM</li>
+                    <li>2:00 PM</li>
+                    <li>3:00 PM</li>
+                    <li>4:00 PM</li>
+                </ul>
+            </div>
+            <div class="clear"></div>       
+        </div>
+  </div><!-- end grid_24 -->
+  
+</div>
+<!-- end .container_24 -->
+
+<div class="footer_container">
+<div class="footer" >
+    <div class="links">      
+        <span><a href="#">الصفحة الرئيسية</a></span>
+        <span><a href="#">أتصل بنا</a></span>
+    </div>
+    <div class="copyright"> 
+        <span class="logo"><img src="img/logo-small.jpg" width="24" height="17"></span> 
+        <span>@ 2012 Vision Media</span>
+    </div>
+</div>
+</div><!-- end footer -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    <script>!window.jQuery && document.write(unescape('%3Cscript src="jquery/jquery-1.7.2.min.js"%3E%3C/script%3E'))</script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+    <script>!window.jQuery.ui && document.write(unescape('%3Cscript src="jquery/jquery-ui-1.8.21.custom.min.js"%3E%3C/script%3E'))</script>
+    <!-- mousewheel plugin -->
+	<script src="js/jquery.mousewheel.min.js"></script>
+	<!-- custom scrollbars plugin -->
+	<script src="js/jquery.mCustomScrollbar.js"></script>
+    <script src="js/functions.js"></script>
+	
+</body>
+</html>

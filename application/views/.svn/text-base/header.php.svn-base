@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title><?php if(!empty($records[0]->seo_title)) echo $records[0]->seo_title; else {echo $this->lang->line('website_title'); if($this->uri->segment(1) != "account") echo (" - ".$title);} ?></title>
+
+<?php if(!empty($records[0]->seo_desc))
+{?><meta name="description" content="<?= $records[0]->seo_desc ?>"><?php }?>
+
+<?php if(!empty($records[0]->seo_keyword))
+{?><meta name="keywords" content="<?= $records[0]->seo_keyword ?>"><?php }?>
+
+
+<base href="<?php echo base_url(); ?>" />
+
+<link rel="shortcut icon" href="<?php echo base_url(); ?>favicon.ico" />
+
+<link type="text/css" rel="stylesheet" href="resource/js/chosen1/chosen.css" />
+<link rel="stylesheet" href="resource/css/jquery-ui-1.8.23.custom.css" type="text/css" />
+<link rel="stylesheet" href="resource/css/tabs.css" type="text/css" />
+<link href="resource/css/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css" />
+<? include('css.php'); ?>
+<? include('js.php'); ?>
+<script src="resource/js/chosen1/chosen.jquery.min.js"></script>
+<script src="resource/js/ajax-chosen.min.js"></script>
+<script src="resource/js/jquery-ui-1.7.3.custom.min.js" language="javascript" type="text/javascript"></script>
+<script src="resource/js/jquery.easy-confirm-dialog.js"></script>
+<script src="resource/js/jquery.mCustomScrollbar.js"></script>
+<script src="resource/js/jquery.mousewheel.min.js"></script>
+<script src="resource/js/functions.js"></script>
+<script type="text/javascript">
+		$(function() {
+			$("#form1").validationEngine({
+				promptPosition : "topLeft"
+			});
+			
+			$(".confirm").easyconfirm();
+		});
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36645294-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+<? include('fb_code.php');?>
+<div class="container_24 inners_background gray">
+
+  <div class="grid_24" >
+  <div class="details_header">
+  		<div class="logo"><?=anchor('/', ' ');?></div>
+        <div class="controls_container inners favorites_header" >	
+            	<? include('menu.php'); ?>
+                <div class="clear"></div>
+                <? if($this->uri->segment(1) != "account" && $this->uri->segment(1) != "favorite" && ($this->uri->segment(1) == "review" && $this->uri->segment(2) == "listing")) include('share.php'); ?>
+        </div><!-- end controls container -->	
+  </div><!-- end header -->
+  </div><!-- end grid_24 -->

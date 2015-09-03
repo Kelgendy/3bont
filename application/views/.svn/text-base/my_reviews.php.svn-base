@@ -1,0 +1,165 @@
+<?php include("header.php"); ?>
+  <script>
+  	$(document).ready(function() {
+  		
+  	$('.save').hide();
+  	
+	$('.update').click(function(event) {
+	    event.preventDefault();
+	 var paragraph= $(this).siblings("p");
+	 var title= $(this).siblings(".title");
+	 var review= paragraph.text();
+	 title.replaceWith('<input type="text" name="textfield" id="textfield" class="review_txtbox title" value="'+title.text()+'"/>');
+	 paragraph.replaceWith('<textarea name="textarea" id="textarea" cols="45" rows="5" class="review_txtarea">'+review+'</textarea>');
+		$(this).hide();
+		$(this).siblings('.save').show();
+	});
+	
+	$('.save').click(function(event) {
+	 event.preventDefault();
+	 var textarea= $(this).siblings(".review_txtarea");
+	 var text= textarea.val();
+	 var input= $(this).siblings(".review_txtbox");
+	 var review_id= $(this).attr("review");
+	  var rating_id= $(this).siblings(".rating_bar").attr("rating");
+      $this= $(this);
+      $sibling_update=$(this).siblings('.update');
+	 var dataToSend = {'id': review_id, 'review' : text, 
+	 'review_title': input.val(), 'rating_id':rating_id} ;
+	 
+	 $.ajax({
+			url: '<?=site_url('review/edit') ?>',
+			type: "POST",
+			data: dataToSend,
+			success:function(response){
+			 input.replaceWith('<span class="title">'+input.val()+'</span>');
+			 textarea.replaceWith('<p>'+text+'</p>');
+			 $this.hide();
+			$sibling_update.show();	
+			},
+			error:function (xhr, textStatus, thrownError){
+				alert("xhr status: " + xhr.statusText);
+			},
+		});
+	});
+	
+	$('.erase').click(function(event) {
+	 event.preventDefault();
+	 var parent= $(this).parent();
+	 var review_id= $(this).attr("review");
+	 $.ajax({
+			url: '<?=site_url('review/remove') ?>',
+			type: "POST",
+			data: {id:review_id},
+			success:function(response){
+				parent.remove();
+			},
+			error:function (xhr, textStatus, thrownError){
+				alert("xhr status: " + xhr.statusText);
+			},
+		});
+	});
+	var currentRating = 0;
+		var currentClass = "rate0";
+		$('.rating1, .rating2, .rating3, .rating4, .rating5, .rating6, .rating7, .rating8, .rating9, .rating10').mouseout(function(){
+			$(this).siblings(':last').removeClass();
+			$(this).siblings(':last').addClass(currentClass);
+			$(this).siblings('span').html(currentRating);
+		});
+
+		$('.rating1, .rating2, .rating3, .rating4, .rating5, .rating6, .rating7, .rating8, .rating9, .rating10').mouseover(function(){
+			currentRating = $(this).siblings(':first').html();
+			currentClass = "rate" + currentRating;
+			var rating = $(this).attr('class');
+			var value = rating.substring(6);
+	
+			$(this).siblings(':last').removeClass();
+			$(this).siblings(':last').addClass('rate'+value);
+			$(this).siblings('span').html(value);
+		});
+
+		$('.rating1, .rating2, .rating3, .rating4, .rating5, .rating6, .rating7, .rating8, .rating9, .rating10').click(function(){
+		var rating = $(this).attr('class');
+		var value = rating.substring(6);
+		var idtag = $(this).parent().attr('id');
+		var listing_id = idtag.substring(7);
+		
+		$.ajax({
+			url: '<?=site_url('rating/add') ?>',
+			type: "GET",
+			data: {id: listing_id, val: value},
+			success:function(response){
+				$(this).siblings(':last').removeClass();
+				currentRating = value;
+				currentClass = "rate"+value;
+				$(this).siblings(':last').addClass(currentClass);
+				$(this).siblings('span').html(currentRating);
+			},
+				error:function (xhr, textStatus, thrownError){
+				alert("xhr status: " + xhr.statusText);
+			},
+		});
+	});
+	});
+  </script>
+  <div class="grid_24">
+    <div class="page_title">جميع تقيماتى</div>
+  </div>
+  <!-- end grid_24 -->
+  
+  <div class="grid_5 right">
+    <div class="profile_image">  
+    	<?php if (isset($account_details->picture)) : ?>
+          <img src="<?php echo $account_details->picture; ?>?t=<?php echo md5(time()); ?>" alt="" />
+        <?php else : ?>
+           <img style="width:100px; height:100px" src="resource/img/profile-img.jpg" alt="" />
+        <?php endif; ?> 
+        <img src="resource/img/icon_profile.png" class="profile_icon"><span class="profile_link"><?=anchor('account/account_settings', "بروفايلى", array('title'=>"بروفايلى"))?></span>
+      <div class="clear"></div>
+    </div>
+  </div>
+  
+  <div class="grid_19">
+  	<?php foreach ($records as $record): ?>
+      <div class="rating_bar_row">
+      	  <div class="review_item"> <span class="date"><?=date('d-m-Y',strtotime($record->date_time))?></span>
+		<div class="rating_bar" id="listing<?=$record->listing_id?>" rating="<?=$record->rating_id?>">
+		<span><?=$record->rating?></span>
+		<div class="rating1"></div>
+		<div class="rating2"></div>
+		<div class="rating3"></div>
+		<div class="rating4"></div>
+		<div class="rating5"></div>
+		<div class="rating6"></div>
+		<div class="rating7"></div>
+		<div class="rating8"></div>
+		<div class="rating9"></div>
+		<div class="rating10"></div>
+		<a class="<?="rate".$record->rating?>" title="أضف تقييمك"></a>
+     </div>
+      <div class="clear"></div>
+      <span class="channel_schedule_grid_showname"><?=anchor("listings/".$record->slug,$record->title)?></a></span>
+      <div class="<?=($record -> category_id == 1) ? 'programs' : (($record -> category_id == 2) ? 'aflam' : (($record -> category_id == 3) ? 'series' : (($record -> category_id == 4) ?
+      'plays' : 'sports')))?>"><span><?=$record->category?></span></div>
+      <span class="title"><?=$record->review_title?></span>
+      <div class="clear"></div>
+      <p id="review_p"><?=$record->review?></p>
+      <br class="clear"/>
+      <a href="#" class="update">تعديل</a><a href="#" review="<?=$record->id?>" class="save delete">حفظ</a><span class="sep">|</span><a href="#" review="<?=$record->id?>" class="erase confirm delete">حذف</a> 
+      <br class="clear"/>
+    </div>
+        <!-- end review_item --> 
+   	<?php endforeach ?>
+    <!-- end grid_17 --> 
+  </div>
+</div>
+
+ <!--pagination-->
+       <?php echo $this->pagination->create_links(); ?>
+  </div>
+
+
+</div>
+
+<!-- end .container_24 -->
+<? include("footer.php"); ?>

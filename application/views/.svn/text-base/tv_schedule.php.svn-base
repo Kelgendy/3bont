@@ -1,0 +1,107 @@
+<? include("header.php"); 
+?>
+<script type="text/javascript">
+$(document).ready(function(){
+	var clicked=false;
+<? if($this -> session -> userdata('account_id') !== FALSE) { ?>
+	$('.channel_schedule_icon_fav').live('click',function(event) {
+		
+	    event.preventDefault();
+	    var href = $(this).attr("href");
+    	var linkTo = href.substring(1);
+	    $this_icon= $(this);
+	    $.ajax({
+			url: '<?=site_url('favorite/add') ?>',
+			type: "GET",
+			data: {id:linkTo},
+			success:function(response){
+				$this_icon.toggleClass("selected");
+			},
+			error:function (xhr, textStatus, thrownError){
+				alert("xhr status: " + xhr.statusText);
+			},
+		});
+	});
+<? } else { ?>
+	$('.channel_schedule_icon_fav').fancybox({
+		height :150,
+		width: 500,
+		autoSize: false,
+		wrapCSS    : 'daleelak_modal',
+		closeClick : true,
+
+		helpers : {
+			title : {
+				type : 'inside'
+			}
+		}
+	});
+<? } ?>
+
+
+
+$(".date_div").click(function(event){
+		clicked="true";
+	 $(".date_div").removeClass('selected');
+	 $(this).addClass('selected');
+	 var date=$(this).children('span').html();
+	var channel_id= "<?=$records[0] -> id?>";
+	 $(".loading_image1").show(); 	
+	  $("#schedule").load("<?=site_url('channels/channel_content')?>",{date:date, channel:channel_id},function(){ $(".loading_image1").hide();});
+
+	
+});
+
+if(clicked==false){
+ $(".loading_image1").show(); 	
+$('#schedule').load("<?=site_url('channels/channel_content/'.$records[0] -> id)?>", function(){ $(".loading_image1").hide();});
+
+}
+
+});
+</script>
+  <div class="grid_24">
+  		<div class="page_title">جدول القناة</div>
+  </div>
+  
+  <div class="grid_24" id="tvschedule_containter">
+        <div class="channel_schedule">
+            <img src="<?if(!file_exists("uploads/channels/89/".$records[0] -> id.".jpg")) {?>resource/img/channel_no_logo_89.png<?}else{ ?>uploads/channels/89/<?=$records[0] -> id.".jpg"?><?}?>" alt="<?=$records[0] -> title ?>" title="<?=$records[0] -> title?>"/>
+            <span><?=$records[0] -> title ?></span>
+        </div>
+        <div class="channel_schedule_frequency">
+        	<img src="resource/img/icon_sattalite.jpg"/>
+            <span>التردد :  <?=$records[0] -> frequency ?>  على <?=$records[0] -> satellite ?></span>
+        </div>
+        <div class="clear"></div>
+        <div class="channel_schedule_grid">
+        	<?php $week = array("الأحد", "الأثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت");
+        	?>
+       <div class="channel_schedule_grid_label"><img src="resource/img/channel_schedule_label.jpg"></div>
+            <?php
+            for ($i=0; $i <7 ; $i++) {
+            	if($i==0){?>
+            	<div class="channel_schedule_grid_date date_div selected">
+            	<?= $week[$weekdays[$i]] ?>
+				<br/><span><?= $dates[$i] ?></span>
+				</div>
+            	<?php } else{ ?>
+            	<div class="channel_schedule_grid_date date_div">
+				<?=$week[$weekdays[$i]] ?>
+				<br/><span><?=$dates[$i] ?></span>
+				</div>
+            <?php }} ?>
+            <div class="channel_schedule_grid_date last"></div>
+            <div></div>
+            <div class="clear"></div>
+         <div id="schedule">
+         </div>
+              <div class="loading_image1">
+         	<img src="resource/css/images/ajax-loader.gif"></img>
+         </div>
+            </div>  
+                  
+        </div>
+  </div><!-- end grid_24 -->
+<? include("fancybox.php"); ?>
+<? include("footer.php"); ?>

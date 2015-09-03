@@ -1,0 +1,63 @@
+<? include("header.php"); ?>
+<script type="text/javascript">
+$(document).ready(function(){
+
+$("#ch_search").ajaxChosen({
+			method: 'GET',
+			url: '<?=site_url('channels/search')?>',
+			dataType: 'json'
+		}, function (data) {
+			var terms = {};
+
+			$.each(data, function(i, item) {
+				terms[data[i][0]] = data[i][1];
+			});
+			return terms;
+		});
+});
+function quickLookup(){
+	var id = $('#ch_search').val();
+	if(id != ""){
+		window.location.href="<?=site_url('channels/');?>/"+id;
+	}}
+
+</script>
+
+<div class="grid_24">
+  		<div class="page_title">القنوات</div>
+        <div class="channels_search">
+        	<span>البحث عن قناة</span>
+        	<select id="ch_search" name="ch_search" search><option></option></select>
+            <input type="submit" name="button"  value="" class="button" onclick="quickLookup();"/>
+     
+              <div class="clear"></div>
+              <div class="channel_filter">
+              	<span>الترتيب الأبجدى</span>
+        	 	<?php
+        	 		echo anchor('channels','All');
+					$list = range('A','Z');
+					foreach ($list as $letter) {
+						if($this->uri->segment(3) != $letter)
+							echo anchor('channels/filter/'.$letter,$letter);
+						else
+							echo anchor('channels/filter/'.$letter,$letter, array('class' => 'selected'));
+					}
+				?>
+        	  </div>
+              <div class="clear"></div>
+              <div class="channels_logos">
+              	<?php foreach ($records as $record) {?>
+              	<div class="channels_item">
+              		<?=anchor('channels/'.$record->slug,(empty($record->logo) ? img(array('src'=>'resource/img/channel_no_logo.png','border'=>'0','alt'=>$record->title)) : img(array('src'=>'uploads/channels/115/'.$record->id.'.jpg','border'=>'0','alt'=>$record->title))), 'title="'.$record->title.'"');?>
+              		<p><?=$record->title_receiver?></p>
+              	</div>
+              	<?php }?>
+              </div>
+              <div class="clear"></div>
+              <? if(empty($records)){
+			  ?> <p>لا يوجد نتائج</p>
+              <? }?>
+            <?php echo $this->pagination->create_links(); ?>
+        </div>
+  </div>
+<? include("footer.php"); ?>

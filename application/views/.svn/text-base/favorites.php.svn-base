@@ -1,0 +1,123 @@
+<?
+include ("header.php");
+?>
+<script type="text/javascript">
+$(document).ready(function(){
+
+	$('.favorite_icon').click(function(event) {
+		event.preventDefault();
+		var href = $(this).attr("href");
+		var linkTo = href.substring(1);
+		$this_icon= $(this);
+		$.ajax({
+			url: '<?=site_url('favorite/add') ?>',
+			type: "GET",
+			data: {id:linkTo},
+			success:function(response){
+				$this_icon.toggleClass("selected");
+			},
+			error:function (xhr, textStatus, thrownError){
+				alert("xhr status: " + xhr.statusText);
+			},
+		});
+	});
+
+		var currentRating = 0;
+		var currentClass = "rate0";
+		$('.rating1, .rating2, .rating3, .rating4, .rating5, .rating6, .rating7, .rating8, .rating9, .rating10').mouseout(function(){
+			$(this).siblings(':last').removeClass();
+			$(this).siblings(':last').addClass(currentClass);
+			$(this).siblings('span').html(currentRating);
+		});
+
+		$('.rating1, .rating2, .rating3, .rating4, .rating5, .rating6, .rating7, .rating8, .rating9, .rating10').mouseover(function(){
+			currentRating = $(this).siblings(':first').html();
+			currentClass = "rate" + currentRating;
+			var rating = $(this).attr('class');
+			var value = rating.substring(6);
+	
+			$(this).siblings(':last').removeClass();
+			$(this).siblings(':last').addClass('rate'+value);
+			$(this).siblings('span').html(value);
+		});
+
+		$('.rating1, .rating2, .rating3, .rating4, .rating5, .rating6, .rating7, .rating8, .rating9, .rating10').click(function(){
+		var rating = $(this).attr('class');
+		var value = rating.substring(6);
+		var idtag = $(this).parent().attr('id');
+		var listing_id = idtag.substring(7);
+		$.ajax({
+			url: '<?=site_url('rating/add') ?>',
+			type: "GET",
+			data: {id: listing_id, val: value},
+			success:function(response){
+				$(this).siblings(':last').removeClass();
+				currentRating = value;
+				currentClass = "rate"+value;
+				$(this).siblings(':last').addClass(currentClass);
+				$(this).siblings('span').html(currentRating);
+			},
+				error:function (xhr, textStatus, thrownError){
+				alert("xhr status: " + xhr.statusText);
+			},
+		});
+	});
+});
+</script>
+<div class="grid_24">
+  		<div class="page_title">قائمتك المفضلة</div>
+  </div>
+<?php $i = 1;?>
+<? if(count($records) == 0){?>
+	<div class="grid_24"><h3>لا يوجد أي عروض في قائمتك المفضلة</h3></div>
+<?}?>
+<?php for($i=0; $i<sizeof($records) ;$i++) {?>
+<div class="grid_6 <?=($records[$i]->category_id==1)?
+'red':(($records[$i]->category_id==2)?
+'blue':(($records[$i]->category_id==3)?
+'orange':(($records[$i]->category_id==4)?
+'terquaz':'green')))?>">
+<div class="rating_bar_row">
+<div class="rating_bar" id="listing<?=$records[$i]->listing_id?>">
+<span><?=!empty($records[$i]->user_rating) ? $records[$i]->user_rating : 0 ?></span>
+<div class="rating1"></div>
+<div class="rating2"></div>
+<div class="rating3"></div>
+<div class="rating4"></div>
+<div class="rating5"></div>
+<div class="rating6"></div>
+<div class="rating7"></div>
+<div class="rating8"></div>
+<div class="rating9"></div>
+<div class="rating10"></div>
+<a href="#" class="<?=!empty($records[$i]->user_rating) ? "rate".$records[$i]->user_rating : "rate0"?>" title="أضف تقييمك"></a>
+</div> <a class="rating_star"><?=round($records[$i]->avg_rating,0)
+?></a>
+</div><div class="clear"></div>
+<div class="favorite_header"></div>
+<div class="favorite_contanier">
+	<div class="favorite_img">
+		<?=anchor('listings/'.$records[$i]->slug,'<div class="image" style="width:212px; height:158px; background-size: cover; background-image: url('. (file_exists('uploads/listings/favorites/'. $records[$i] -> listing_id . '.jpg')? 'uploads/listings/favorites/'. $records[$i] -> listing_id . '.jpg' : 'resource/img/listing_nologo_fav.png').'); background-position: top center"></div>')
+		?></div>
+		<div class="favorite_right">
+		<span class="favorite_show_name"><?=$records[$i]->title?></span>
+		<div class="clear"></div>
+		<div class="favorite_show_category_title">التصنيف:</div>
+		<div class="favorite_bullet"></div>
+		<span class="favorite_show_category_name"><?=$records[$i]->category?></span>
+		</div>
+		<a href="#<?=$records[$i]->listing_id?>" id="fav_icon" class="favorite_icon selected"></a>
+	</div>
+</div>
+<!-- end grid_6 -->
+<?php }?>
+<div class="clear"></div>
+ <?php echo $this->pagination->create_links(); ?>
+</div>
+
+ <!--pagination-->
+
+<!-- end .container_24 -->
+<?
+	include ("footer.php");
+?>

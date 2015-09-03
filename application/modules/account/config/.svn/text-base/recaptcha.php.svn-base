@@ -1,0 +1,18 @@
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+/*
+|--------------------------------------------------------------------------
+| reCAPTCHA
+|--------------------------------------------------------------------------
+|
+| reCAPTCHA PHP Library - http://recaptcha.net/plugins/php/
+|
+| recaptcha_theme	'red' | 'white' | 'blackglass' | 'clean' | 'custom'
+*/
+$config['recaptcha_public_key']			= "6LfHi9kSAAAAAHytlD3-3tJsUbwR1fWx1lFBDAjI";
+$config['recaptcha_private_key']		= "6LfHi9kSAAAAAPNf6j7oyJwqh5IzkKKYsX5A7-4l";
+$config['recaptcha_theme']				= "black";
+
+
+/* End of file recaptcha.php */
+/* Location: ./application/modules/account/config/recaptcha.php */

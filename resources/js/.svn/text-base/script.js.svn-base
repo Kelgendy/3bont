@@ -1,0 +1,254 @@
+var counter = 0;
+var old_slug;
+			
+function valid(f) {
+
+!(/^[A-zÑñ0-9-]*$/i).test(f.value)?f.value = f.value.replace(/[^A-zÑñ0-9-]/ig,''):null;
+
+var reg = /[\^]/;
+ if(reg.test(f.value)){
+ f.value = f.value.replace(/\^/g, '')
+ }
+} 
+
+$('.add_image').live('click', function () {
+
+	var x = $('.images').children();
+	if(x[0]!=undefined)
+	{
+	x = $('.images').children();
+	var index = x[x.length-1].className.split('images')[1];
+	counter = ++index;
+	
+	}
+	else {
+		counter = 1;
+		
+	}
+
+	var image = '<div class="control-group images'+counter+'"><input type="file" name="images'+counter+'"/><input type="button" value="X" class="delete_imageORset btn btn-danger"/></span>';
+	
+	image = image +'<label>Title</label><input type="text" name="title'+counter+'" class="validate[required]">';
+	image = image +'<label>Text</label><textarea style="margin-bottom:10px" name="text'+counter+'"></textarea></div>';
+	$(image).appendTo('.images');
+	});
+
+$('.add_set').live('click', function () {
+
+	var x = $('.sets').children();
+	if(x[0]!=undefined)
+	{
+	x = $('.sets').children();
+	var index = x[x.length-1].className.split('sets')[1];
+	counter = ++index;
+	
+	}
+	else {
+		counter = 1;
+		
+	}
+
+	var set = '<div class="sets'+counter+'"><input type="text" name="sets'+counter+'"/><input type="button" value="X" class="delete_imageORset btn btn-danger" style="margin-left:5px;"/></span></div>';
+	
+	$(set).appendTo('.sets');
+	});	
+
+$('.unselect_all').live('click', function () {
+
+		$('.image_div').find('input:checked').attr('name','image').each(function () {
+		
+		$(this).attr('checked', false);
+	});
+	
+	});
+
+$('.delete_selected').live('click', function () {
+
+	var x = "";
+	$('.image_div').find('input:checked').attr('name','image').each(function () {
+
+	   if(x=="")
+	   x = $(this).val();
+	   else
+	   x = x + ',' + $(this).val();
+	});
+	
+	var r=confirm("Are You Sure?");
+	
+	if (r==true)
+	  {
+		  	$.ajax({            
+	      url: 'admin/slider/delete',
+	      type: 'POST',          
+	      data: {images:x},
+	      success: function(data) {
+	      	location.reload();
+	          }
+	      });
+	  	
+	  }
+	  
+	return false;
+	
+	});
+
+$('.submit_selected').live('click', function () {
+
+	$('.hidden_data').val('submit');
+	
+	var x =[];
+	$('.image_div').find('input:checked').attr('name','image').each(function () {
+	   x.push($(this).val());
+	});
+	
+	$('.hidden_image').val(x);
+	
+	});	
+
+$('.submit_gallery_view').bind('click', function () {
+
+	$('#gallery').children().remove();
+	var id = $('.fest_select_gallery').find('option:selected').val();
+	
+	$.ajax({            
+      url: 'admin/gallery/view_gallery',
+      type: 'POST',          
+      data: {id:id },
+      success: function(data) {
+      	
+      	$(data).appendTo('#gallery');
+      	 $('#gallery a').lightBox();
+          }
+      });
+      
+ 
+       
+	});		
+		
+$('.delete_imageORset').live('click', function () {
+
+$(this).parent().remove();
+	
+	});	
+	
+$('.add_detail').live('click', function () {
+
+	var x = $('.details').children();
+	if(x[0]!=undefined)
+	{
+	x = $('.details').children();
+	var index = x[x.length-1].className.split('detail')[1];
+	counter = ++index;
+	}
+	else {
+		counter = 1;
+	}
+	
+	var detail = '<div class="detail'+counter+'" style="display: block;margin-top:5px; margin-bottom:5px;"><span>Detail Name: </span><input class="validate[required]" type="text" name="detail_name'+counter+'"/><span style="margin-left:5px;">Detail Data: </span><input class="validate[required]" type="text" name="detail_data'+counter+'"/><span style="margin-left:5px;"><input type="button" value="X" class="delete_detail btn btn-danger"/></span></div>';
+	
+	$(detail).appendTo('.details');
+	});
+	
+$('.delete_detail').live('click', function () {
+
+var detail_name = $(this).parent().parent().find('input').val();
+$(this).parent().parent().remove();
+
+$.ajax({            
+      url: 'admin/movie/delete_detail',
+      type: 'POST',          
+      data: {slug:old_slug,detail_name:detail_name },
+      success: function(data) {
+          }
+      });
+	
+	});	
+
+$('.submit_InsertEdit').live('click', function () {
+
+	var x = [];
+	$('.cat_check').find('option:selected').attr('name','selected_cat').each(function () {
+	   
+	   x.push($(this).val());
+	});
+	
+	$('.new_categ').val(x);
+});
+
+$('.submit_edit_movie').live('click', function () {
+
+	$('.detail_count').val($('.details').children().length);
+	
+});	
+
+$('.submit_insert_set').live('click', function () {
+
+	$('.sets_count').val($('.sets').children().length);
+	
+});	
+
+$('.fest_select_assigned').change(function() {
+	
+  var fest_id = $(this).val();
+  $('.movie_select').children().remove();
+  
+  $.ajax({            
+	      url: 'admin/awards/movie_fest',
+	      type: 'POST', 
+	      data_type:'Array',         
+	      data: {fest_id:fest_id},
+	      success: function(data) {
+		      	$(data).appendTo('.movie_select');
+		      	var movie_id = $('.movie_select').val();
+	  			$('.award_cat').children().remove();
+		  		$.ajax({            
+			      url: 'admin/awards/award_movie',
+			      type: 'POST',          
+			      data: {movie_id:movie_id},
+			      success: function(data) {
+			      	$(data).appendTo('.award_cat');
+			          }
+			      });
+	         }
+	      });      
+});	
+
+$('.movie_select').change(function() {
+	
+  var movie_id = $(this).val();
+  $('.award_cat').children().remove();
+  $.ajax({            
+	      url: 'admin/awards/award_movie',
+	      type: 'POST',          
+	      data: {movie_id:movie_id},
+	      success: function(data) {
+	      	$(data).appendTo('.award_cat');
+	          }
+	      });
+});	
+	
+$(document).ready(function () {
+
+var country = $('.country_hidden').val();
+$('#jury_country').find('option[value="'+country+'"]').attr('selected', 'selected');
+
+var country2 = $('.country2_hidden').val();
+$('.tribute_country').find('option[value="'+country2+'"]').attr('selected', 'selected');
+
+var award_name = $('.award_name_hidden').val();
+$('.award_name').find('option[value="'+award_name+'"]').attr('selected', 'selected');
+
+var award_fest = $('.award_fest_hidden').val();
+$('.award_fest').find('option[value="'+award_fest+'"]').attr('selected', 'selected');
+
+var award_movie = $('.award_movie_hidden').val();
+$('.award_movie').find('option[value="'+award_movie+'"]').attr('selected', 'selected');
+
+var award_person = $('.award_person_hidden').val();
+if(award_person!='')
+{
+	$('.person_check').attr('checked', 'checked');
+	$('.person_text').val(award_person);
+}
+
+});

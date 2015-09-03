@@ -1,0 +1,16 @@
+</div>
+<div class="footer_container">
+<div class="footer" >
+        	<div class="links">      
+            	<span><?=anchor('/',"الصفحة الرئيسية");?></span>
+                <span><?=anchor('schedule',"الجدول الكامل");?></span>
+                <span><?=anchor('channels',"القنوات");?></span>
+            </div>
+            <div class="copyright"> 
+            	<span class="logo"><a href="http://www.vmegypt.com" target="_blank"><img src="resource/img/logo-small.jpg" width="24" height="17"></a></span> 
+            	<span><a href="http://www.vmegypt.com" target="_blank">@ 2012 Vision Media</a></span>
+            </div>
+</div>
+</div><!-- end footer -->
+</body>
+</html>

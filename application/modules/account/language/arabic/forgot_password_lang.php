@@ -1,0 +1,28 @@
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+/*
+|--------------------------------------------------------------------------
+| Forgot Password
+|--------------------------------------------------------------------------
+*/
+$lang['forgot_password_page_name']						= 'نسيت كلمة المرور؟';
+$lang['forgot_password_instructions']					= 'سوف نرسل تعليمات إعادة تعيين كلمة المرور إلى عنوان البريد الإلكتروني المرتبط بحسابك.';
+$lang['forgot_password_username_email']					= "اسم المستخدم/البريد الإلكتروني";
+$lang['forgot_password_send_instructions']				= 'ارسل التعليمات';
+
+$lang['forgot_password_username_email_does_not_exist']	= 'هذا اسم المستخدم / البريد الالكتروني غير موجود.';
+$lang['forgot_password_does_not_manage_password']		= 'عذرا، إننا لا ندير كلمة المرور لحسابك.';
+$lang['forgot_password_recaptcha_required']				= 'مطلوب اختبار CAPTCHA';
+$lang['forgot_password_recaptcha_incorrect']			= 'اختبار CAPTCHA غير صحيح.';
+
+$lang['reset_password_sent_instructions']				= "<h3>حسنا، لقد أرسلنا تعليمات إلى البريد الإلكتروني الخاص بك.</h3>
+<p>إذا لم تتلقى التعليمات في غضون دقيقة أو اثنتين حاول %s!</p>";
+$lang['reset_password_resend_the_instructions']			= 'إعادة إرسال التعليمات';
+$lang['reset_password_email_sender'] 					= 'Daleelak.TV';
+$lang['reset_password_email_subject'] 					= 'Daleelak.TV استعادة كلمة المرور';
+$lang['reset_password_email']							= '<html>مرحبا %s,<br /><br />تلقينا طلب إعادة تعيين كلمة المرور الخاصة بك.<br /><br />
+لإعادة تعيين كلمة المرور الخاصة بك، الرجاء الضغط على الرابط أدناه أو نسخ ولصق الرابط في المتصفح:<br />%s</html>';
+
+
+/* End of file forgot_password_lang.php */
+/* Location: ./application/modules/account/language/english/forgot_password_lang.php xxx*/

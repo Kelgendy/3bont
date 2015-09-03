@@ -1,0 +1,288 @@
+<? include("header.php"); 
+   date_default_timezone_set('Etc/GMT'); // this has been added
+?>
+<script>
+$(document).ready(function(){
+	var notToday=false;
+	var dayChange=false;
+$('.datepicker1').datepicker({
+				dateFormat: "yy-mm-dd",
+				minDate: 0,
+				maxDate: '+7d',
+			   onSelect: function(dateText, inst) {
+			   		$(".loading_image").show();
+			   		$('.dateselect1').val(dateText);
+			   		$(".ui-datepicker").slideToggle(300); 
+			   		var cur_date="<?=date('Y-m-d H:00',$cur_date)?>";
+			   		var today=new Date("<?=date('Y-m-d',$cur_date)?>");
+			   		var hour= "<?=date('h:00 a',$cur_date)?>";
+			 		
+					var difference= Math.abs((new Date(cur_date)).valueOf()-(new Date(dateText+' 00:00')).valueOf())/(1000*60*60);
+					if(today.valueOf()==(new Date(dateText)).valueOf()) {
+						difference=0;
+						var time= hour.substring(0,2)*1;
+						var ap= hour.substring(6);
+						for (var i=2; i < 7; i++) {
+							if(time>=12 && ap=='am')
+								ap='pm';
+							else if(time>=12 && ap=='pm')
+							ap='am';
+	
+							if(time==12)
+								time_shown='01:00 ';
+							else if(time<10)
+								time_shown='0'+time+':00 ';
+							else
+								time_shown=time+':00 ';
+	 
+							$('.hours li:nth-child('+i+')').html(time_shown+ap); 
+							time=time+1;
+	 					}
+	 					$('.right_arrow').addClass('disabled');			
+ 					}else{
+		 				$('.hours li:nth-child(2)').html("12:00 am");
+						$('.hours li:nth-child(3)').html("01:00 am");
+						$('.hours li:nth-child(4)').html("02:00 am");
+						$('.hours li:nth-child(5)').html("03:00 am");
+						$('.hours li:nth-child(6)').html("04:00 am");
+						$('.right_arrow').removeClass('disabled');	
+ 					}
+
+				$('#rows').load("<?=site_url('schedule/content')?>", {count:difference},$.scroll);
+				
+				$("#cur_date").attr('value',dateText);
+				var c= $('.left_arrow').attr('href');
+				var c1= $('.right_arrow').attr('href');
+				$('.left_arrow').attr('href',difference+1);
+				$('.right_arrow').attr('href',difference-1);
+				 
+			   }
+			});
+			
+		    $(".dateselect1").click(function() {
+		       $(".ui-datepicker").slideToggle(300); 
+		       return false;
+		    });
+
+$(".loading_image").show();
+$('#rows').load("<?=site_url('schedule/content')?>", $.scroll);
+
+
+ 
+$('.left_arrow').click(function(event)
+{	
+	event.preventDefault();
+	var c= $(this).attr('href')*1;
+	$(this).attr("href", c+1);
+	$('.right_arrow').removeClass('disabled');
+	$('.right_arrow').attr("href", c-1);
+	var cur_date= $("#cur_date").val();
+	var date1= new Date(cur_date);
+	var day = date1.getDate();
+	var month = date1.getMonth();
+	var year = date1.getFullYear();
+	var hours= date1.getHours();
+
+	for (var i=2; i < 7; i++) {
+	 var time=$('.hours li:nth-child('+i+')').html().substring(0,2)*1;
+	 var ap=$('.hours li:nth-child('+i+')').html().substring(6);
+	 if(time+1<10 )
+	 	var new_time='0'+(time+1)+':00 ';
+	 else if(time+1<=12)
+	 	var new_time=(time+1)+':00 ';
+	 else
+	 var new_time='01:00 ';
+
+	if(time==11 && ap=='pm')
+	ap='am';
+	else if(time==11)
+	ap='pm';
+
+	  
+	$('.hours li:nth-child('+i+')').html(new_time+ap);
+	}
+		if($('.hours li:nth-child(2)').html().substring(6)=='am' && $('.hours li:nth-child(2)').html().substring(0,2)=='12')
+	{
+	
+	date1.setHours(0);
+	var dVal=date1.valueOf();
+	var date2= new Date(dVal+(24*60*60*1000));
+	 day1 = date2.getDate();
+	 month1 = date2.getMonth();
+	 year1 = date2.getFullYear();
+	$('.dateselect1').attr('value',year1+'-'+(month1+1)+'-'+day1);
+	$("#cur_date").attr('value',year1+'-'+(month1+1)+'-'+day1)
+	}
+	var stringDate= year+'-'+(month+1)+'-'+day+' '+hours+':00';
+	$(".loading_image").show();
+	$('#rows').load("<?=site_url('schedule/content')?>",{count:c},$.scroll);
+	
+	
+});
+
+$('.right_arrow').click(function(event)
+{
+	event.preventDefault();
+	var c= $(this).attr('href')*1;
+	var cur_date= $("#cur_date").val();
+	var date1= new Date(cur_date);
+	var day = date1.getDate();
+	var month = date1.getMonth();
+	var year = date1.getFullYear();
+	var hours= date1.getHours();
+	$(this).attr("href", c-1);
+	$('.left_arrow').attr("href", c+1);
+		
+	if(c>0)
+	$(this).removeClass('disabled');
+	else
+	$(this).addClass('disabled');
+	
+	time_1=$('.hours li:nth-child(2)').html().substring(0,2)*1;
+	for (var i=2; i < 7; i++) {
+	 var time=$('.hours li:nth-child('+i+')').html().substring(0,2)*1;
+	 var ap=$('.hours li:nth-child('+i+')').html().substring(6);
+	 if(time-1<1)
+	  	var new_time='12:00 ';
+	 else if(time-1<10 )
+	 	var new_time='0'+(time-1)+':00 ';
+	 else if(time-1<=12)
+	 	var new_time=(time-1)+':00 ';
+	
+	
+
+	if((time==12) && ap=='pm')
+	ap='am';
+	else if( time==12)
+	ap='pm';
+
+	  
+	$('.hours li:nth-child('+i+')').html(new_time+ap);
+	}
+
+	if($('.hours li:nth-child(2)').html().substring(6)=='pm' && time_1==12)
+	{
+	var cur_date= $("#cur_date").val();
+	var date1= new Date(cur_date);
+	date1.setHours(0);
+	var dVal=date1.valueOf();
+	var date2= new Date(dVal-(24*60*60*1000));
+	 day1 = date2.getDate();
+	 month1 = date2.getMonth();
+	 year1 = date2.getFullYear();
+	$('.dateselect1').attr('value',year1+'-'+(month1+1)+'-'+day1);
+	 $("#cur_date").attr('value',year1+'-'+(month1+1)+'-'+day1)
+	}
+	$(".loading_image").show();
+	$('#rows').load("<?=site_url('schedule/content')?>",{count:c},$.scroll);
+
+	
+	
+});
+
+});	
+</script>
+            	
+<input type="hidden" id="cur_date" value="<?=date('Y-m-d H:00',$cur_date)?>"/>
+ <div class="grid_24">
+  		<div class="page_title">عنوان الصفحة</div>
+  </div>
+  
+  <div class="grid_24" id="tvschedule_containter">
+  		<div class="tv_grid_filter">
+        	<span class="tl_corner"></span>
+            <span class="tr_corner"></span>
+        	<span class="title">بحـــث</span>
+            <form action="#" class="filter_form">
+            	<div class="field date">
+                	<label class="icon_label">التاريخ</label>
+                	  <div class="datepicker1">
+                 <input type="text" class="txtbox dateselect1" placeholder="اليوم" value="<?=date('Y-m-d',$cur_date)?>"/>
+                </div>
+           
+               
+                </div>
+                <div class="field time" style="display: none;">
+                	<label class="icon_label">الوقت</label>
+                	<div class="dropdown">
+                        <h3><a href="#">جميع الأوقات</a></h3>
+                        <ul>
+                          <li><a href="#">أفلام</a></li>
+                          <li><a href="#">مسلسلات</a></li>
+                          <li><a href="#">مسرحيات</a></li>
+                          <li><a href="#">برامج</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="field channel" style="display: none;">
+                	<span class="icon_label">القناة</span>
+                	<div class="dropdown">
+                        <h3><a href="#">جميع القنوات</a></h3>
+                        <ul>
+                          <li><a href="#">أفلام</a></li>
+                          <li><a href="#">مسلسلات</a></li>
+                          <li><a href="#">مسرحيات</a></li>
+                          <li><a href="#">برامج</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="field category" style="display: none;">
+                	<span class="icon_label">التصنيف</span>
+                	<div class="showfilter">
+                        <h3><a href="#">---------</a></h3>
+                        <ul>
+                          <li class="aflam"><a href="#">أفلام</a></li>
+                          <li class="series"><a href="#">مسلسلات</a></li>
+                          <li class="plays"><a href="#">مسرحيات</a></li>
+                          <li class="programs"><a href="#">برامج</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="clear"></div>
+        <div class="tv_grid">
+        	<div class="tv_gird_header">
+        			<a href="1" class="left_arrow"></a>
+                <a href="-1" class="right_arrow disabled"></a>
+
+            	<ul class="hours">
+            		 <li class="first"></li>
+            		<?php 
+            		 $now=strtotime(date('Y-m-d H:00',($cur_date)));
+            		 for ($i=0; $i <5 ; $i++) {?> 
+						<li dir="ltr"><?= date('h:00 a',$cur_date+(60*60*$i))?></li> 
+					 <?php }?>
+
+                </ul>
+            </div>
+        
+            <div class="clear"></div>
+            
+            <div class="tv_grid_rows tvListing" id="rows">
+
+         </div>
+         <div class="loading_image">
+         	<img src="resource/css/images/ajax-loader.gif"></img>
+         </div>
+           <div class="tv_gird_header">
+           	
+            	<a href="1" class="left_arrow"></a>
+                <a href="-1" class="right_arrow disabled"></a>
+            	<ul class="hours">
+            		 <li class="first"></li>
+            		<?php 
+            		 for ($i=0; $i <5 ; $i++) {?> 
+						<li dir="ltr"><?= date('h:00 a',$cur_date+(60*60*$i))?></li> 
+					 <?php }?>
+
+                </ul>
+            </div>
+            </div>
+            <div class="clear"></div>       
+   
+  </div><!-- end grid_24 -->
+  
+</div>
+<!-- end .container_24 -->
+<? include("footer.php"); ?>

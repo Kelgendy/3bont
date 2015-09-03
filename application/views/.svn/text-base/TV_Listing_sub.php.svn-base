@@ -1,0 +1,114 @@
+<?php 
+           $now=strtotime(date('Y-m-d H:00',$cur_date+($counter*60*60)));
+            function get_d($d)
+            {$duration='';
+            	if($d <=15)
+				$duration=15;
+				else if($d<=30 && $d>15)
+				$duration=30;
+				else if($d>30 && $d<=45)
+				$duration=45;
+				else if($d>45 && $d<=60)
+				$duration=60;
+				else if($d>60 && $d<=75)
+				$duration=75;
+				else if($d>75 && $d<=90)
+				$duration=90;
+				else if($d>90 && $d<=105)
+				$duration=105;
+				else if($d>105 && $d<=120)
+				$duration=120;
+				else if($d>120 && $d<=135)
+				$duration=135;
+				else if($d>135 && $d<=150)
+				$duration=150;
+				else if($d>150 && $d<=165)
+				$duration=165;
+				else if($d>165 && $d<=180)
+				$duration=180;
+				else if($d>180 && $d<=195)
+				$duration=195;
+				else if($d>195 && $d<=210)
+				$duration=210;
+				else if($d>210 && $d<=225)
+				$duration=225;
+				else if($d>225 && $d<=240)
+				$duration=240;
+				else if($d>240 && $d<=255)
+				$duration=255;
+				else if($d>255 && $d<=270)
+				$duration=270;
+				else if($d>70 && $d<=285)
+				$duration=285;
+				else 
+				$duration=300;
+				
+				return $duration;
+            }?>
+			<?php $i=0;
+            	 foreach ($channels as $channel) {?>
+            	<div class="tv_gird_row  <?=$i%2==1?'odd_row':''?>">
+            	<div class="tv_grid_channel">
+                	<a title="<?=$channel->title?>" href="<?=site_url("channels/".$channel->slug)?>"><img src="<?if(!file_exists("uploads/channels/60/".$channel-> id.".jpg")) {?>resource/img/channel_no_logo_60.png<?}else{ ?>uploads/channels/60/<?=$channel -> id.".jpg"?><?}?>"/></a>
+                </div>
+                  <?$j=0;
+				  $odd=0;
+				  $total=0;
+				 if(empty($schedules[$channel->id])){?>
+				 		 <div class="tv_grid_show duration_300"></div>
+				 	<?php }?>
+                  <? foreach($schedules[$channel->id] as $listing)
+                  {
+	                  if($listing -> space == 0)
+	                  {			 $total+=$listing->duration;?>
+	                  <?if($j==0 && strtotime($listing->starttime)>$now){
+	                  	$total+=$d= abs($now-strtotime($listing->starttime))/60;?>
+	                   <div class="tv_grid_show <?=$odd++%2==1?'odd_show':''?> duration_<?=($d>300)?300:get_d($d)?>"></div>
+	                  	<?php }?>
+	                <div class="tv_grid_show <?=$odd%2==1?'odd_show':''?> duration_<?=($total>300)?get_d($listing->duration-($total-300)):get_d($listing->duration) ?>">
+	                	<div class="show_details">
+	                    	<span class="tv_grid_show_name"><a title="<?=$listing->listing_name?>" href="<?=site_url('listings/'.$listing->slug)?>"><?=$listing->listing_name?></a></span>
+	                    	<span class="tv_grid_show_time" dir="ltr">(<?=date('H:i',strtotime($listing->starttime))?>)</span>
+	                    	<div class="<?=($listing -> category_id == 1) ? 'programs' : (($listing -> category_id == 2) ? 'aflam' : (($listing -> category_id == 3) ? 'series' : (($listing -> category_id == 4) ?
+	                    'plays' : 'sports')))?>"><span class="show_cat"><?=$listing->category?></span></div>
+	                    </div>
+	                    <a href="#" class="channel_schedule_icon_grid" style="display:none"></a>
+	                </div>
+	                <?php if($j+1<sizeof($schedules[$channel->id])&&$schedules[$channel->id][$j+1]->starttime>$schedules[$channel->id][$j]->endtime){
+	                	$total+=$d= abs(strtotime($schedules[$channel->id][$j+1]->starttime)-strtotime($schedules[$channel->id][$j]->endtime))/60;?>
+	                   <div class="tv_grid_show <?=++$odd%2==1?'odd_show':''?> duration_<?=($total>300)?get_d($d-($total-300)):get_d($d) ?>"></div>
+	                <?php }?>
+	              
+	                <?php $j++; $odd++;}
+
+					else
+						{
+							$total+=$listing->duration;?>
+	                  <?if($j==0 && strtotime($listing->starttime)>$now){
+	                  	$total+=$d= abs($now-strtotime($listing->starttime))/60;?>
+	                   <div style="pointer-events: none;cursor: default;" class="tv_grid_show <?=$odd++%2==1?'odd_show':''?> duration_<?=($d>300)?300:get_d($d)?>"></div>
+	                  	<?php }?>
+	                <div class="tv_grid_show <?=$odd%2==1?'odd_show':''?> duration_<?=($total>300)?get_d($listing->duration-($total-300)):get_d($listing->duration) ?>">
+	                	<div style="pointer-events: none;cursor: default;" class="show_details">
+	                    	<span class="tv_grid_show_name"><a title="<?=$listing->listing_name?>" href="<?=site_url('listings/'.$listing->slug)?>"><?=$listing->listing_name?></a></span>
+	                    	<span class="tv_grid_show_time" dir="ltr">(<?=date('H:i',strtotime($listing->starttime))?>)</span>
+	                    </div>
+	                    <a href="#" class="channel_schedule_icon_grid" style="display:none"></a>
+	                </div>
+	                <?php if($j+1<sizeof($schedules[$channel->id])&&$schedules[$channel->id][$j+1]->starttime>$schedules[$channel->id][$j]->endtime){
+	                	$total+=$d= abs(strtotime($schedules[$channel->id][$j+1]->starttime)-strtotime($schedules[$channel->id][$j]->endtime))/60;?>
+	                   <div class="tv_grid_show <?=++$odd%2==1?'odd_show':''?> duration_<?=($total>300)?get_d($d-($total-300)):get_d($d) ?>"></div>
+	                <?php }?>
+	              
+	                <?php $j++; $odd++;
+						}
+
+				}
+                
+                ?>
+                  <?php if($total<300 && !empty($schedules[$channel->id])){?>
+                	  <div class="tv_grid_show <?=++$odd%2==1?'odd_show':''?> duration_<?=get_d(300-$total)?>"></div>
+                	<?php }?>
+                	  <div class="clear"></div> 
+            </div>           
+ <?php $i++; }?>

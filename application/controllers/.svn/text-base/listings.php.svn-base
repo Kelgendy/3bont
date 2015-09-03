@@ -1,0 +1,396 @@
+<?php
+
+class Listings extends CI_Controller {
+
+	function __construct() {
+		parent::__construct();
+
+		// Load the necessary stuff...
+		$this -> load -> helper(array('language', 'url', 'form', 'account/ssl'));
+		$this -> load -> library(array('account/authentication', 'pagination'));
+		$this -> load -> model(array('channel_model','account/account_model', 'schedule_model', 'rating_model', 'cast_model', 'listing_model', 'photos_model', 'reviews_model', 'favorites_model', 'user_model'));
+		$this -> lang -> load(array('general'));
+	}
+
+	function index() {
+		
+		date_default_timezone_set('Etc/GMT');
+		$userid = $this -> session -> userdata('account_id');
+		$slug = $this -> uri -> segment(2);
+		if(empty($slug)){
+			redirect();
+		}
+		
+		$data['listing'] = $this -> listing_model -> get_slug($slug);
+		
+		///////////////// Login Rating ///////////////////
+		
+		if(isset($_SERVER['HTTP_REFERER']))
+		{
+			$prev_url = $_SERVER['HTTP_REFERER'];
+			$prev_listing = preg_split('/\/listings\//', urldecode($prev_url));
+		}
+		
+
+		$session = $this->session->userdata('rate');
+		if(!empty($session))
+		{
+			$session_slug = $session['listing_slug'];
+			$session_rating = $session['value'];
+			$list_id = $session['listing_id'];
+			$curr_listing = $this->uri->segment(2); 		
+			
+			if(isset($prev_listing[1]))
+			{
+					
+				if(($prev_listing[1] == $session_slug) && $curr_listing == $session_slug)
+				{
+					if ($this -> rating_model -> get_user_rating($userid, $list_id) == FALSE)
+					$this -> rating_model -> insert($list_id, $userid, $session_rating);
+				 else 
+					$this -> rating_model -> update2($list_id, $userid, $session_rating);
+
+					$this->session->unset_userdata('rate');
+				}	
+				
+			}
+
+		
+		}
+		//////////////////////////////////////////////////////
+		
+		$user_zone = $this -> session -> userdata('user_timezone');
+
+		$offset = 2 * 60 * 60;
+
+		$local = $this -> session -> userdata('localization');
+		if ($local != NULL) {
+			$offset = $local * 60 * 60;
+		} else if (!empty($user_zone)) {
+			$dtz = new DateTimeZone($user_zone);
+			$time = new DateTime('now', $dtz);
+			$offset = $dtz -> getOffset($time);
+		}
+		
+		$start_date = date('Y-m-d',time());
+		$end_date = date('Y-m-d',time()+(14*24*60*60));
+		
+		$data['related'] = $this -> listing_model -> get_related($slug,$start_date,$end_date,$offset);
+		//$related_array = array();
+		
+		for($i=0;$i<6;$i++)
+		{
+			if(isset($data['related'][$i]))	
+			$related_array[] = $data['related'][$i];
+			
+			else break;
+		}
+		$data['related'] = $related_array;
+		//print_r($data['related']);die;
+		
+		foreach ($data['related'] as $record) {
+			if (!empty($record -> poster) && !file_exists('uploads/listings/110/' . $record -> id . '.jpg')) {
+
+				list($width, $height, $type, $attr) = getimagesize($record -> poster);
+				$this -> load -> library('image_lib');
+				$config['image_library'] = 'gd2';
+				$config['source_image'] = $record -> poster;
+				$config['maintain_ratio'] = TRUE;
+				$config['new_image'] = 'uploads/listings/110/' . $record -> id . '.jpg';
+
+				if ($width > $height) {
+					$config['height'] = 108;
+					$config['x_axis'] = '0';
+					$config['y_axis'] = '0';
+					$config['width'] = round((108 / $height) * $width);
+				} else {
+					$config['width'] = 110;
+					$config['x_axis'] = '0';
+					$config['y_axis'] = '0';
+					$config['height'] = round((110 / $width) * $height);
+				}
+
+				$this -> image_lib -> initialize($config);
+				$this -> image_lib -> resize();
+				$this -> image_lib -> clear();
+			}
+		}
+		foreach ($data['listing'] as $record) {
+			if (!empty($record -> poster) && !file_exists('uploads/listings/310/' . $record -> id . '.jpg')) {
+				list($width, $height, $type, $attr) = getimagesize($record -> poster);
+				$this -> load -> library('image_lib');
+				$config['image_library'] = 'gd2';
+				$config['source_image'] = $record -> poster;
+				$config['maintain_ratio'] = TRUE;
+				$config['new_image'] = 'uploads/listings/310/' . $record -> id . '.jpg';
+
+				if ($width > $height) {
+					$config['height'] = 255;
+					$config['x_axis'] = '0';
+					$config['y_axis'] = '0';
+					$config['width'] = round((255 / $height) * $width);
+				} else {
+					$config['width'] = 310;
+					$config['x_axis'] = '0';
+					$config['y_axis'] = '0';
+					$config['height'] = round((310 / $width) * $height);
+				}
+
+				$this -> image_lib -> initialize($config);
+				$this -> image_lib -> resize();
+				$this -> image_lib -> clear();
+			}
+		}
+
+		$listing_id = $data['listing'][0] -> id;
+		
+		$data['rating'] = $this -> rating_model -> get_average_listing($listing_id);
+		$data['cast'] = $this -> cast_model -> get_listing($listing_id);
+		$schedule = $this -> schedule_model -> get_byListing($listing_id);
+		$data['photos'] = $this -> photos_model -> get_listing($listing_id);
+		$data['reviews'] = $this -> reviews_model -> get_listingP($listing_id, 2, 0);
+		
+		if(!empty($userid)){
+			$data['user_review'] = $this -> rating_model -> get_user_rating($userid, $listing_id);
+			$data['review_added'] = $this -> reviews_model -> get_user_listing($userid, $listing_id);
+			
+			$query = $this -> favorites_model -> get_user_listing($userid, $listing_id);
+			if (sizeof($query) > 0)
+				$data['favorites'] = true;
+			else
+				$data['favorites'] = false;
+		}else{
+			$data['favorites'] = false;
+			$data['user_review'] = 0;
+		}
+		
+		// Arrange Schedule
+		$user_zone = $this -> session -> userdata('user_timezone');
+
+		$offset = 2 * 60 * 60;
+
+		$local = $this -> session -> userdata('localization');
+		if ($local != NULL) {
+			$offset = $local * 60 * 60;
+		} else if (!empty($user_zone)) {
+			$dtz = new DateTimeZone($user_zone);
+			$time = new DateTime('now', $dtz);
+			$offset = $dtz -> getOffset($time);
+		}
+		
+		// Dates Schedule
+		$data['dates'] = array();
+		$data['dates_rel'] = array();
+		$data['repeat'] = array();
+		$data['times'] = array();
+		$data['title'] = array();
+		$data['logo'] = array();
+		$data['fix'] = array();
+		$data['slug'] = array();
+	    $sort_array = array();
+		
+		$plus_channels = array();
+		$new_schedule = array();
+		
+		foreach ($schedule as $item) 
+		{
+			
+			$plus_channels = $this -> schedule_model -> getPlusChannels($item->channel_id);	
+			$new_schedule[$item->channel_title]=$plus_channels;
+			
+			foreach ($new_schedule[$item->channel_title] as $channel)
+			{
+					
+				$start_date_old = $item->start_date;
+				$start_time_old = $item->starttime;
+				$end_time_old = $item->endtime;
+				
+				$offset2 = ($channel->offset)*60*60;
+				
+				$new_start_date = date('Y-m-d',strtotime($start_date_old." ".$start_time_old)+$offset2);
+				$new_start_time = date('H:i:s',strtotime($start_time_old)+$offset2);
+				$new_end_time = date('H:i:s',strtotime($end_time_old)+$offset2);
+				
+				$old_day_month = date('d',strtotime($start_date_old.$start_time_old));
+				$new_day_month = date('d',strtotime($start_date_old.$start_time_old)+$offset2);
+				
+				if($old_day_month==$new_day_month)
+					$new_day = $item->day;
+				else
+					{
+						$new_day = ($item->day)+1;
+						if($new_day==8)
+						$new_day = 0;
+					}
+					
+				
+				
+				$channel->live = $item->live;
+				$channel->start_date = $new_start_date;
+				$channel->starttime = $new_start_time;
+				$channel->endtime = $new_end_time;
+				$channel->day = $new_day;
+				$channel->channel_title = $channel->title;
+				$channel->channel_logo = $channel->logo;
+				$channel->channel_id = $channel->id;
+				$channel->channel_slug= $channel->slug;
+				$channel->has_plus = 1;
+				$channel->original_id = 0;
+				$channel->rep = $item->rep;
+				
+				unset($channel->satellite);
+				unset($channel->title_receiver);
+				unset($channel->frequency);
+				unset($channel->paid);
+				unset($channel->hidden);
+				unset($channel->logo);
+				unset($channel->slug);
+				unset($channel->title);
+				unset($channel->id);
+				
+				
+				$schedule[]=$channel;
+			}	
+		}
+
+		
+		foreach ($schedule as $item) {
+			$item -> fix = '';	
+			if (!empty($item -> channel_logo) && !file_exists('uploads/channels/47/' . $item -> channel_id . '.jpg')) {
+				list($width, $height, $type, $attr) = getimagesize($item -> channel_logo);
+				
+				$this -> load -> library('image_lib');
+				$config['image_library'] = 'gd2';
+				$config['source_image'] = $item -> channel_logo;
+				$config['maintain_ratio'] = FALSE;
+
+				$config['new_image'] = 'uploads/channels/47/' . $item -> channel_id . '.jpg';
+				if ($width > $height) {
+					$config['width'] = 47;
+					$config['height'] = round((47 / $width) * $height);
+					if($config['height'] > 28)
+						$item -> fix = 'height="28"';
+				} else {
+					$config['height'] = 28;
+					$config['width'] = round((28 / $height) * $width);
+					if($config['width'] > 47)
+						$item -> fix = 'width="47"';
+				}
+
+				$this -> image_lib -> initialize($config);
+				$this -> image_lib -> resize();
+				$this -> image_lib -> clear();
+			}else if(file_exists('uploads/channels/47/' . $item -> channel_id . '.jpg')){
+				list($width, $height, $type, $attr) = getimagesize('uploads/channels/47/' . $item -> channel_id . '.jpg');
+				
+				if($width > 47){
+					$item -> fix = 'width="47"';
+				}
+				if($height > 28){
+					$item -> fix = 'height="28"';
+				}
+			}
+
+			if (date('Y-m-j', strtotime($item -> start_date . " " . $item -> starttime) + $offset) != $item -> start_date)
+				$day_offset = ceil($offset / (60 * 60 * 24));
+			else {
+				$day_offset = 0;
+			}
+			
+			$day = $item -> day;
+			
+			if ($day != -1) {
+				$two_weeks = date('Y-m-d', time() + 60 * 60 * 24 * 14);
+				
+				$date = '';
+				$day = 0;
+				
+				while($date < $two_weeks){
+					$new_time = date("H:i", strtotime($item -> starttime) + $offset);
+						if($new_time < $item -> starttime){
+							$date = date('Y-m-d', time() + 60*60*24*($day + 1));
+						}else{
+							$date = date('Y-m-d', time() + 60*60*24*$day);
+						}
+					if(date('N', time() + 60*60*24*$day) == $item -> day){
+						$data['dates'][] = $date;
+						$data['times'][] = $new_time;
+						$data['logo'][] = file_exists('uploads/channels/47/' . $item -> channel_id . '.jpg') ? 'uploads/channels/47/' . $item -> channel_id . '.jpg' : "";
+						$data['fix'][] =  $item -> fix;
+						$data['slug'][] = $item -> channel_slug;
+						$data['title'][] = $item -> channel_title;
+						$data['repeat'][] = $item->rep;
+					}
+					
+					$day++;
+				}
+				
+			} else {
+				$item_date = strtotime($item -> start_date . " " . $item -> starttime) + $offset;
+				
+					$data['dates'][] = date('Y-m-d', $item_date);
+					$data['times'][] = date('H:i', strtotime($item -> starttime) + $offset);
+					$data['logo'][] = file_exists('uploads/channels/47/' . $item -> channel_id . '.jpg') ? 'uploads/channels/47/' . $item -> channel_id . '.jpg' : "";
+					$data['fix'][] =  $item -> fix;
+					$data['slug'][] = $item -> channel_slug;
+					$data['title'][] = $item -> channel_title;
+					$data['repeat'][] = $item -> rep;
+			}
+			
+		}
+
+		switch($data['listing'][0]->cid){
+			case 1:
+				$data['cat_title'] = "برنامج";
+				break;
+			case 2:
+				$data['cat_title'] = "فيلم";
+				break;
+			case 3:
+				$data['cat_title'] = "مسلسل";
+				break;
+			case 4:
+				$data['cat_title'] = "مسرحية";
+				break;
+			case 5:
+				$data['cat_title'] = "رياضة";
+				break;
+			default:
+				break;
+		}
+		
+		array_multisort($data['dates'], $data['times'],SORT_ASC, $data['logo'], $data['slug'], $data['repeat'],$data['title'], $data['fix']);
+		foreach ($data['listing'] as $row) {
+			$new_vid = $row->video;
+		
+		$x = explode('/', $new_vid);
+		$vid_id = $x[count($x)-1];
+		
+		$test1 = "player.vimeo.com";
+		$test2 = "vimeo.com";
+		
+		if(in_array($test1, $x) || in_array($test2, $x))
+		{
+			$row->video_type = "vimeo";
+			$row->video_id = $x[count($x)-1];
+		}
+			
+		else 
+			{
+				$row->video_type = "youtube";
+				$row->video_id = -1;
+			}
+			
+		}
+		
+		//print_r($data);die;
+		$this -> load -> view('details_aflam', $data);
+
+	}
+
+	function pag() {
+		$offset = $_POST['offset'];
+		echo $offset;
+	}
+
+}

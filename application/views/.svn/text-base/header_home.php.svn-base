@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="دليلك دوت تي في Daleelak.tv موقع يقدم لك جداول مواعيد القنوات الفضائية, مواعيد أحدث الافلام المصرية و الاجنبية علي القنوات الفضائية, المسلسلات و المسرحيات العربية, البرامج الفضائية  الرياضية و مواعيد برامج التوك شو الحوارية.">
+<title><?php echo $this->lang->line('website_title'); ?> - الصفحة الرئيسية</title>
+<base href="<?php echo base_url(); ?>" />
+<link rel="shortcut icon" href="<?php echo base_url(); ?>favicon.ico" />
+<link rel="stylesheet" href="resource/css/jquery-ui-1.8.23.custom.css" type="text/css" />
+<? include ('css.php'); ?>
+<? include ('js.php'); ?>
+<script src="resource/js/jquery-ui-1.7.3.custom.min.js" language="javascript" type="text/javascript"></script>
+<script src="resource/js/index.js" language="javascript" type="text/javascript"></script>
+<script src="resource/js/slider_test.js" language="javascript" type="text/javascript"></script>
+<script src="resource/js/jquery.masonry.min.js" language="javascript" type="text/javascript"></script>
+<script>
+	var hours = <?=$hours?>;
+	var minutes = <?=$minutes?>;
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36645294-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+<div class="container_24">
+
+  <div class="grid_24" style="position: relative">
+  		<div class="category_filter" id="cat_filter">
+        	<div class="cat"><a href="#cat2" class="aflam selected"><span>أفلام</span></a></div>
+            <div class="cat"><a href="#cat1" class="programs"><span>برامج</span></a></div>
+            <div class="cat"><a href="#cat5" class="sports"><span>رياضة</span></a></div>
+            <div class="cat"><a href="#cat3" class="series"><span>مسلسلات</span></a></div>
+            <div class="cat"><a href="#cat4" class="plays"><span>مسرحيات</span></a></div>
+        </div>
+        <input type="hidden" class="curr_date" value="<?= $cur_date?>"/>
+  		<div class="logo_home"><?=anchor('/', ' ');?></div>
+        <div class="controls_container">
+            	<? include('menu.php'); ?>
+                <div class="datepicker">
+                	<a class="right_arrow" style="cursor: pointer"></a>
+                   	<a class="dateselect" style="cursor: pointer"><?=date("d-m-Y",$cur_date)?></a>
+                    <a class="left_arrow" style="cursor: pointer"></a>
+                </div>
+                <div class="bubble"></div>
+         		<div class="slider"></div>
+                <div class="live"><a href="#"  id="live" title="البث الحى"></a></div>
+                <div class="favorites"><a href="#" <?=$this -> session -> userdata('account_id') !== FALSE ? 'id="favorites"':'id="favorite_loggedout"'?> title="قائمتك المفضلة"></a></div>
+                <div class="shuffle"><a href="#" id="shuffle" title="إختيار عشوائي"></a></div>
+         		<div class="paid"><a href="#" id="paid" title="القنوات المفتوحة"></a></div>
+                <div class="showfilter disabled">
+                        <h3><p>التصنيف</p></h3>
+                        <ul>
+                        	<? foreach($subcategories as $subcategory) { ?>
+                        		<li class="<?= $subcategory->category_id == 1 ? "programs subcat": ($subcategory->category_id == 2 ? "aflam subcat": ($subcategory->category_id == 3 ? "series subcat": ($subcategory->category_id == 4 ? "play subcat": ($subcategory->category_id == 5 ? "sports subcat": ""))))?>"><a href="#<?=$subcategory->id?>"><?=$subcategory->title?></a></li>
+							<? }?>
+                        </ul>
+                </div>
+        </div><!-- end controls container -->	
+  </div><!-- end grid_24 -->

@@ -1,0 +1,11 @@
+<!-- FancyBox Content -->
+<div id="modal" class="fancybox" style="display: none;">
+    <h1 class="sections_title">يجب تسجيل الدخول</h1>
+    <p>
+      يجب تسجيل الدخول لإستخدام هذه الخاصية. يمكنك تسجيل الدخول بالضغط على "دخول" أدناه، أو إنشاء حساب جديد بالضغط على "تسجيل حساب". 
+    </p>
+    <div class="btns">
+    	<a class="btn" href="<?=site_url('account/sign_in/?continue='.urlencode(site_url($this->uri->uri_string())))?>">دخــول</a>
+        <a class="btn" href="<?=site_url('account/sign_up/?continue='.urlencode(site_url($this->uri->uri_string())))?>">تسجيل حساب</a>
+    </div>
+</div>

@@ -1,0 +1,34 @@
+<script type="text/javascript">
+$(document).ready(function(){
+
+$("#search").autocomplete({
+        data: [<?php
+        foreach ($channels as $channel) {?>
+"<?php echo $channel->title;?>",<?php 
+        }
+       ?>],   selectFirst: true,
+        autoFill: true
+    });
+});
+
+</script>
+<div class="grid_24">
+  		<div class="page_title">القنوات</div>
+        <div class="channels_search">
+        	  <span>البحث عن قناة</span>
+        	   <?=form_open('channels/search');?>
+        	 <input type="text" id="search" name="search" />
+              <input type="submit" name="button" id="button" value="" class="button">
+            <?php echo form_close(); ?>
+              <div class="clear"></div>
+              <div class="channels_logos">
+              	<?php foreach ($results as $result) {?>
+              	<div class="channels_item"><?=anchor('channels/view/'.$result->title_receiver,img(array('src'=>$result->logo,'border'=>'0','alt'=>'Home')));?></div>
+              	<?php }?>
+              </div>
+           
+  </div>
+  
+
+  
+</div>

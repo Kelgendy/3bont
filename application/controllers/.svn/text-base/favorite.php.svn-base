@@ -1,0 +1,89 @@
+<?php
+
+class favorite extends CI_Controller {
+
+	function __construct() {
+		parent::__construct();
+
+		// Load the necessary stuff...
+		$this -> load -> helper(array('language', 'url', 'form', 'account/ssl'));
+		$this -> load -> library(array('account/authentication','pagination'));
+		$this -> load -> model(array('account/account_model', 'favorites_model', 'rating_model'));
+		$this -> lang -> load(array('general'));
+	}
+
+	function index() {
+		if ($this -> authentication -> is_signed_in()) {
+			$config['base_url'] = 'index.php/favorite/index/';
+			$config['per_page'] = 12;
+			$config['total_rows'] = $this -> favorites_model -> countAll_user($this -> session -> userdata('account_id'));
+			$config['full_tag_open'] = '<div class="channels_navigation_contanier">';
+			$config['full_tag_close'] = '</div>';
+			$config['cur_tag_open'] = '<a class="selected">';
+			$config['cur_tag_close'] = '</a>';
+			$config['uri_segment'] = 3;
+			$data['records'] = $this -> favorites_model -> get_userP($this -> session -> userdata('account_id'),$config['per_page'], $this->uri->segment(3));
+			$data['account'] = $this -> account_model -> get_by_id($this -> session -> userdata('account_id'));
+			$data['title'] = "قائمتك المفضلة";
+			
+			foreach($data['records'] as $record){
+				if (!empty($record->poster) && !file_exists('uploads/listings/favorites/' . $record -> listing_id . '.jpg')) {	
+					list($width, $height, $type, $attr) = getimagesize($record -> poster);
+					$this -> load -> library('image_lib');
+					$config['image_library'] = 'gd2';
+					$config['source_image'] = $record -> poster;
+					$config['maintain_ratio'] = TRUE;
+					$config['new_image'] = 'uploads/listings/favorites/' . $record -> listing_id . '.jpg';
+					
+					if ($width > $height) {
+						$config['height'] = 158;
+						$config['x_axis'] = '0';
+						$config['y_axis'] = '0';
+						$config['width'] = round ((158 / $height) * $width);
+					} else {
+						$config['width'] = 215;
+						$config['x_axis'] = '0';
+						$config['y_axis'] = '0';
+						$config['height'] = round((215 / $width) * $height);
+					}
+	
+					$this->image_lib->initialize($config);
+					$this -> image_lib -> resize();
+					$this -> image_lib -> clear();
+				}
+				if(empty($record->user_rating))
+					$record->user_rating = 0;
+				
+				$record -> avg_rating = $this -> rating_model -> get_average_listing($record->listing_id);
+			}
+			$this -> pagination -> initialize($config);
+			$this -> load -> view('favorites', $data);
+			
+		} else {
+			redirect('account/sign_in/?continue=' . urlencode(base_url() . 'index.php/favorite'));
+		}
+	}
+
+	function remove($id) {
+		return $this -> favorites_model -> remove_listing($id);
+	}
+
+	function add() {
+		$user_id = $this -> session -> userdata('account_id');
+		$query = $this -> favorites_model -> get_user($user_id);
+		
+		$added = array();
+		foreach ($query as $q) {
+			$added[] = $q -> listing_id;
+		}
+		$listing_id = $_GET['id'];
+		if (in_array($listing_id, $added)) {
+			$this -> remove($listing_id);
+			echo 0;
+		} else {
+			$this -> favorites_model -> insert($user_id, $listing_id);
+			echo 1;
+		}
+	}
+
+}

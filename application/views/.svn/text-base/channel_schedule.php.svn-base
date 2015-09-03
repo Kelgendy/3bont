@@ -1,0 +1,75 @@
+   <?php
+			$i=1;
+           foreach ($listings as $listing) {
+			{
+	           	if($listing -> space == 0)	
+					{
+		           	$selected=FALSE;
+		           	if($listing->starttime <= $cur_time && $listing->endtime >=$cur_time && $today){
+					 $selected =TRUE;} 
+					 ?>
+					 <? if($selected || $i%2==1){?>
+		  				<div class="channel_schedule_grid_row  <?=($selected)?'selected':''?>">
+		             <?php }else{ ?>
+		  				<div class="channel_schedule_grid_row2">	
+		             <?php } ?>
+		            	<div class="channel_schedule_grid_time"><?=$listing -> starttime?></div>
+		                <div class="channel_schedule_grid_sep"></div>
+		                <div class="channel_schedule_grid_img">
+		                	<a href="<?=site_url("listings/".$listing->slug)?>">
+		                <div  style="width: 98px; height: 82px; background-image:url(<?= (file_exists('uploads/listings/98/'.$listing -> listing_id.'.jpg') ? 'uploads/listings/98/'.$listing -> listing_id.'.jpg' : 'resource/img/nologo_98.png')?>); background-position: center; background-color: #000"></div>
+		                </a>
+		                </div>
+		                <div class="channel_schedule_grid_details">
+		                    <span class="channel_schedule_grid_showname"><?=anchor('listings/'.$listing->slug,$listing -> listing_name.($listing->rep == 1 ? " (إعادة)":"")) ?></span>
+		                      <?php if($selected){?>
+		                      <span class="channel_schedule_grid_shownow">يعرض الان</span>
+		                      <?php } ?>
+		                    <div class="<?=($listing -> category_id == 1) ? 'programs' : (($listing -> category_id == 2) ? 'aflam' : (($listing -> category_id == 3) ? 'series' : (($listing -> category_id == 4) ?
+		                    'plays' : 'sports')))?>">
+		                    	<span <?=$selected ? 'class="selected"' : ''?>><?=$listing -> category ?></span>
+		                    </div>
+		                    <p class="channel_schedule_grid_description"><?=$listing -> description ?></p>
+		                </div>
+		                <div class="channel_schedule_grid_icons">
+		                	<?php if(in_array($listing->listing_id, $favorites)){?>
+		                		  <a href="#<?=$this -> session -> userdata('account_id') !== FALSE ? $listing -> listing_id : "modal"?>" id="fav_icon" class="channel_schedule_icon_fav selected"></a>   
+		                	<?php }else{ ?>
+		                			<a href="#<?=$this -> session -> userdata('account_id') !== FALSE ? $listing -> listing_id : "modal"?>" id="fav_icon" class="channel_schedule_icon_fav "></a>  
+		                	<?php } ?>
+		                        		
+		                </div>
+		               
+		            <div class="clear"></div>  
+		              </div>  
+		           <?php $i++;
+					}
+			else{
+				$selected=FALSE;
+		           	if($listing->starttime <= $cur_time && $listing->endtime >=$cur_time && $today){
+					 $selected =TRUE;} 
+					 ?>
+					 <? if($selected || $i%2==1){?>
+		  				<div class="channel_schedule_grid_row  <?=($selected)?'selected':''?>" style="pointer-events: none;cursor: default;">
+		             <?php }else{ ?>
+		  				<div class="channel_schedule_grid_row2">	
+		             <?php } ?>
+		            	<div class="channel_schedule_grid_time"><?=$listing -> starttime?></div>
+		                <div class="channel_schedule_grid_sep"></div>
+		                <div class="channel_schedule_grid_img">
+		                	<a href="<?=site_url("listings/".$listing->slug)?>">
+		                <div  style="width: 98px; height: 82px; background-image:url('resource/img/nologo_98.png'); background-position: center; background-color: #000"></div>
+		                </a>
+		                </div>
+		                <div class="channel_schedule_grid_details">
+		                    <span class="channel_schedule_grid_showname"><?=anchor('listings/'.$listing->slug,$listing -> listing_name.($listing->rep == 1 ? " (إعادة)":"")) ?></span>
+		                    <p class="channel_schedule_grid_description"><?=$listing -> description ?></p>
+		                </div>
+		            <div class="clear"></div>  
+		              </div>  
+		           <?php $i++;
+			}
+}
+
+}?>
+            <div class="clear"></div> 

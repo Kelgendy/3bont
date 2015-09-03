@@ -1,0 +1,295 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title><?php if(!empty($listing[0]->seo_title)) echo $listing[0]->seo_title; else {echo $this -> lang -> line('website_title') . " - " .  $cat_title.": ".$listing[0] -> title ;} ?></title>
+<meta name="description" content='<?php if(!empty($listing[0]->seo_desc)) echo $listing[0]->seo_desc; else echo $listing[0] -> l_description?>'>
+<?php if(!empty($listing[0]->seo_keyword))
+{?><meta name="keywords" content="<?= $listing[0]->seo_keyword ?>"><?php }?>
+
+
+<base href="<?php echo base_url(); ?>" />
+<link rel="shortcut icon" href="<?php echo base_url(); ?>favicon.ico" />
+<link rel="image_src" href="<?=(file_exists('uploads/listings/310/'.$listing[0] -> id.'.jpg') ? 'http://www.daleelak.tv/uploads/listings/310/'.$listing[0] -> id.'.jpg' : 'http://www.daleelak.tv/resource/img/logo-home.png')?>?>" />
+<link type="text/css" rel="stylesheet" href="resource/js/chosen1/chosen.css" />
+<?
+	include ('css.php');
+ ?>
+<link href="resource/css/galleria.classic.css" rel="stylesheet" type="text/css" />
+<?
+	include ('js.php');
+ ?>
+<script src="resource/js/galleria-1.2.7.min.js"></script>  
+<script src="resource/js/chosen1/chosen.jquery.min.js"></script>
+<script src="resource/js/ajax-chosen.min.js"></script>
+<script type="text/javascript">
+	$(function() {
+		$("#form1").validationEngine({
+			promptPosition : "topLeft"
+		});
+	});
+
+</script>
+<script>
+	var number_of_pages = 0;
+	var submitted=false;
+	<?
+	include ("rating.php");
+ ?>
+		var limit = 5;
+		var size = $('#details_grid').children().size();
+
+		number_of_pages = Math.ceil(size / limit);
+
+		$('#current_page').val(1);
+		$('#limit').val(limit);
+		var navigation_html = '<a class="arrow_right disabled" href="javascript:previous();"></a>';
+		var current_link = 0;
+
+		while (number_of_pages > current_link) {
+			navigation_html += '<a class="page_link" style="display:none;" href="javascript:go_to_page(' + current_link + ')" longdesc="' + current_link + '">' + (current_link + 1) + '</a>';
+			current_link++;
+		}
+
+		navigation_html += '<a class="arrow_left" href="javascript:next();"></a>';
+		$('#page_navigation').html(navigation_html);
+		$('#page_navigation .page_link:first').addClass('active_page');
+		go_to_page(0);
+
+		if (number_of_pages == 1) {
+			$('.arrow_left').addClass('disabled');
+		}
+
+<? if($this -> session -> userdata('account_id') !== FALSE) { ?>
+	
+		$('#fav_icon').click(function(event) {
+	    event.preventDefault();
+	    var href = $(this).attr("href");
+		var linkTo = href.substring(1);
+	    $this_icon= $(this);
+	    $.ajax({
+			url: '<?=site_url('favorite/add') ?>
+			',
+			type: "GET",
+			data: {id:linkTo},
+			success:function(response){
+			$this_icon.toggleClass("selected");
+			},
+			error:function (xhr, textStatus, thrownError){
+			alert("xhr status: " + xhr.statusText);
+			},
+			});
+			});
+
+$('#checkin_icon').click(function(event) {
+event.preventDefault();
+alert("check in");
+});
+			
+			
+<?php if(empty($review_added)){?>
+		$(".add_review").fancybox({
+		height : 230,
+		width : 500,
+		autoSize : false,
+		openEffect : 'fade',
+		closeEffect : 'fade',
+		resize : false,
+		closeClick : true,
+		afterClose: function(){if(submitted)location.reload();},
+		afterLoad : function() {
+			this.skin.prepend('<img class="pop_logo" width="140" height="85" src="resource/img/modal_logo.png" alt="Daleelak"/>');
+		},
+		helpers : {
+			title : {
+				type : 'inside'
+			}
+		}
+	}).children().click(function(e) {
+  		return false;
+	});
+<?php }else{?>
+	$(".add_review").fancybox({
+	height : 110,
+	width : 500,
+	autoSize : false,
+	openEffect : 'fade',
+	closeEffect : 'fade',
+	resize : false,
+	closeClick : true,
+	helpers : {
+	title : {
+	type : 'inside'}
+	}
+	}).children().click(function(e) {
+  		return false;
+	});
+<?php }?>
+	
+<? } else { ?>
+	$('#fav_icon, #checkin_icon, #add_review').fancybox({
+		height : 150,
+		width : 500,
+		autoSize : false,
+		wrapCSS : 'daleelak_modal',
+		hideOnContentClick : true,
+
+		helpers : {
+			title : {
+				type : 'inside'
+			}
+		}
+	}); 
+<? } ?>
+
+	
+	$('#cancel_review').click(function(event){parent.$.fancybox.close();});
+	//Ajax for ADD Review
+	$("#insert_review").click(function(event) {
+			event.preventDefault();
+			var review=$("#r_textarea").val();
+			var review_title=$("#textfield").val();
+			var href = $(this).attr("href");
+			var listing_id=href.substring(1);
+			var modal= $('#modal1');
+			$.ajax({
+			url: '<?=site_url('review/insert') ?>
+			',
+			type: "GET",
+			data: {review:review, review_title:review_title, listing_id:listing_id},
+			success:function(response){
+				if(response==1){
+			modal.html("<h3>Review has been added</h3>");
+			modal.parent().css("height","60px");
+			submitted=true;
+			}
+			
+			},
+			error:function (xhr, textStatus, thrownError){
+			alert("xhr status: " + xhr.statusText);
+			},
+			});
+	});
+	//End of Review ADD
+	
+	});
+// End of Document Ready function
+	function previous() {
+		if ($('#page_navigation .arrow_right').hasClass('disabled')){
+			return false;
+		}
+		$('#page_navigation .arrow_left.disabled').removeClass('disabled');
+		new_page = parseInt($('#current_page').val()) - 1;
+
+		if (new_page == 0) {
+			$('#page_navigation .arrow_right').addClass('disabled');
+		}
+		if ($('#page_navigation .active_page').prev('.page_link').length == true) {
+			go_to_page(new_page);
+		}
+
+	}
+
+	function next() {
+		if ($('#page_navigation .arrow_left').hasClass('disabled'))
+			return false;
+		$('#page_navigation .arrow_right.disabled').removeClass('disabled');
+		new_page = parseInt($('#current_page').val()) + 1;
+		if (new_page == number_of_pages - 1) {
+			$('#page_navigation .arrow_left').addClass('disabled');
+		}
+
+		if (new_page != number_of_pages) {
+
+			go_to_page(new_page);
+
+		}
+
+	}
+
+	function go_to_page(page_num) {
+		var show_per_page = parseInt($('#limit').val());
+		start_from = page_num * show_per_page;
+		end_on = start_from + show_per_page;
+		$('#details_grid').children().hide().slice(start_from, end_on).fadeIn(300);
+		$('.page_link[longdesc=' + page_num + ']').addClass('active_page').siblings('.active_page').removeClass('active_page');
+		$('#current_page').val(page_num);
+	}   
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36645294-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+<?
+	include ('fb_code.php');
+?>
+	<?php $cid=$listing[0]->cid?>
+<div class="container_24 inners_background <?=($cid == 1) ? 'red' : (($cid == 2) ? 'blue' : (($cid == 3) ? 'orange' : (($cid == 4) ? 'terquaz' : 'green'))) ?>">
+
+  <div class="grid_24" >
+  <div class="details_header">
+  		<div class="logo"><?=anchor('/', ' '); ?></div>
+        <div class="controls_container inners" >	
+            	<?
+			include ('menu.php');
+ ?>
+                <div class="clear"></div>
+                 <div class="favorites_big"><a title="<?=($favorites) ?'Remove from favorites':'Add to favorites'?>" class="<?=($favorites) ? 'selected' : '' ?>" id="fav_icon" href="#<?=$this -> session -> userdata('account_id') !== FALSE ? $listing[0] -> id : "modal" ?>"></a></div>
+                <?
+					include ('share.php');
+ ?>
+        </div><!-- end controls container -->	
+  </div><!-- end header -->
+  </div><!-- end grid_24 -->
+
+<!-- FancyBox Content 2 --->
+<div id="modal1" class="add_review" style="display: none;">
+    <h1 class="sections_title">أضف تقييم</h1>
+      <div class="rating_bar" id="listing<?=$listing[0]->id?>">
+        	<span><?=!empty($user_review) ? $user_review->value : ""?></span>
+				<div class="rating1"></div>
+				<div class="rating2"></div>
+				<div class="rating3"></div>
+				<div class="rating4"></div>
+				<div class="rating5"></div>
+				<div class="rating6"></div>
+				<div class="rating7"></div>
+				<div class="rating8"></div>
+				<div class="rating9"></div>
+				<div class="rating10"></div>
+		<a href="#" class="<?=(!empty($user_review))?'rate'.$user_review->value : ''?>" title="أضف تقييمك"></a>
+        </div>
+    <div class="field">
+    	<input type="text" name="textfield" id="textfield" class="review_txtbox title" placeholder="ضع عنوان تقييمك هنا"/>
+    	<textarea id="r_textarea" class="textarea" rows="" cols="" placeholder="ضع تقييمك هنا"></textarea>
+    </div>
+    <div class="btns" style="float:right">
+    <a class="delete" id="cancel_review" href="#">إلغاء</a>	
+    <span class="sep">|</span>
+    <a class="delete"  href="#<?=$listing[0]->id?>" id="insert_review" >حفظ</a>
+    </div>
+    </form>
+</div>
+
+
+<!-- FancyBox Content -->
+<div id="modal2" class="fancybox2" style="display: none;">
+    <h1 class="sections_title">لقد ادخلت تقييمك</h1>
+    <p>
+      لتعديل تقييمك ادخل علي صفحة تقييماتك بالضغط على "تقييماتي" .
+    </p>
+    <div class="btns">
+    	<a class="btn" id="my_reviews" style="float:right;" href="<?=site_url('review')?>">تقييماتي</a>
+    </div>
+</div>

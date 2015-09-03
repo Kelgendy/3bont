@@ -1,0 +1,73 @@
+<?php
+class Filters extends CI_Controller {
+	
+	function setFilter()
+	{
+		$this->session->unset_userdata('subfilter');
+		if(isset($_POST['filter'])){
+			$this->session->set_userdata('filter', $_POST['filter']);
+		}
+		
+	}
+	
+	function setSubFilter()
+	{
+		if(isset($_POST['filter'])){
+			$this->session->set_userdata('subfilter', $_POST['filter']);
+		}
+		
+	}
+	
+	function unsetFilter()
+	{
+		$this->session->unset_userdata('subfilter');
+		$this->session->unset_userdata('filter');
+	}
+	
+	function setTime(){
+		if(isset($_POST['filter'])){
+			$this->session->set_userdata('time', $_POST['filter']);
+		}
+	}
+	
+	function setDate(){
+		if(isset($_POST['filter'])){
+			$this->session->set_userdata('date', $_POST['filter']);
+		}
+	}
+	
+	function setShuffle()
+	{
+			$this->session->set_userdata('shuffle', 1);
+	}
+	
+	function setLive()
+	{
+			$this->session->set_userdata('live', 1);
+	}
+	
+	function unsetLive()
+	{
+			$this->session->unset_userdata('live');
+	}
+	
+	function setPaid()
+	{
+			$this->session->set_userdata('paid', 1);
+	}
+	
+	function unsetPaid()
+	{
+			$this->session->unset_userdata('paid');
+	}
+	
+	function setFavorite()
+	{
+			$this->session->set_userdata('fav', 1);
+	}
+	
+	function unsetFavorite()
+	{
+			$this->session->unset_userdata('fav');
+	}
+}

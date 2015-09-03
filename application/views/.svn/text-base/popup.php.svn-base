@@ -1,0 +1,32 @@
+<div class="channel_logo"><a href="index.php/channels/<?=$channel_slug?>" title="<?=$channel_title?>"><img src="<?=$channel_img?>"></a></div>
+<div class="time"><?=date('h:i A', strtotime($start_time)+ $offset)?> - <?=date('h:i A', strtotime($end_time) + $offset)?></div>
+<div class="strip_top"></div>
+<div class="strip_top_big">
+<div class="rating_bar" id="listing<?=$listing_id?>">
+<span><?=$user_rating?></span>
+<div class="rating1"></div>
+<div class="rating2"></div>
+<div class="rating3"></div>
+<div class="rating4"></div>
+<div class="rating5"></div>
+<div class="rating6"></div>
+<div class="rating7"></div>
+<div class="rating8"></div>
+<div class="rating9"></div>
+<div class="rating10"></div>
+<a class="rate<?=$user_rating?>" title="أضف تقييمك"></a>
+</div>
+    <a href="#" class="rating_star"><?=$avg_rating?></a>
+</div>
+<div><a href="<?=site_url("listings/".$listing_slug)?>" title="<?=$title?>"><div class="item2_img" style="background-image: url('<?=$poster_img?>'); background-size: cover;"></div></a></div>
+<div class="strip_bottom">
+	<span class="show_name"><?=$title?></span>
+    <span class="show_channel">القناة: <?=$channel_title?></span>
+    <span class="show_description"><?=$s_description?></span>
+    <?=$paid == 1 ? "<span class=\"paid\"></span>" : ""?>
+    <?=$live == 1 ? "<span class=\"paid\"></span>" : ""?>
+    <span class="satellite"><span><?=$satellite?></span></span>
+    <a href="<?=site_url("listings/".$listing_slug)?>" title="<?=$title?>" class="more">المزيد من التفاصيل</a>
+    <div class="actions_float">
+    <a href="#<?=$listing_id?>" class="favorite_icon favorites <?=$favorite == 1 ? "selected" : ""?>"></a>
+    </div>

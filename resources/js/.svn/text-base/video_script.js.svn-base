@@ -1,0 +1,6 @@
+$(document).ready(function () {
+
+src = src.split('vi/')[1];
+src = 'http://img.youtube.com/vi/'+src+'/0.jpg';
+
+});

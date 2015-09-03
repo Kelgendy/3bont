@@ -1,0 +1,28 @@
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+/*
+|--------------------------------------------------------------------------
+| Sign Up
+|--------------------------------------------------------------------------
+*/
+$lang['sign_up_page_name']						= 'حساب جديد';
+$lang['sign_up_heading'] 						= 'انشئ حسابك على دليلك تي في';
+$lang['sign_up_third_party_heading']			= 'إنشاء حساب بإستخدام حسابك على';
+$lang['sign_up_with']							= 'إشترك بحسابك على %s';
+
+$lang['sign_up_username']						= 'إسم المستخدم';
+$lang['sign_up_password']						= 'كلمة المرور';
+$lang['sign_up_password2']						= 'إعادة كلمة المرور';
+$lang['sign_up_email']							= 'البريد الإلكتروني';
+$lang['sign_up_create_my_account']				= 'انشئ حسابي';
+$lang['sign_up_sign_in_now']					= 'تسجيل دخول';
+
+$lang['sign_up_already_have_account']			= 'لديك حساب على دليلك تي في؟';
+$lang['sign_up_recaptcha_required']				= 'مطلوب اختبار CAPTCHA';
+$lang['sign_up_recaptcha_incorrect']			= 'اختبار CAPTCHA غير صحيح.';
+$lang['sign_up_username_taken'] 				= 'إسم المستخدم غير متاح';
+$lang['sign_up_email_exist']					= 'البريد الإلكتروني مسجل مسبقاً';
+$lang['sign_up_forgot_your_password'] 			= 'نسيت كلمة المرور';
+
+/* End of file sign_up_lang.php */
+/* Location: ./application/modules/account/language/english/sign_up_lang.php xxx*/

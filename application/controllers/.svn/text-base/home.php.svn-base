@@ -1,0 +1,477 @@
+<?php
+
+class Home extends CI_Controller {
+
+	function __construct() {
+		parent::__construct();
+
+		// Load the necessary stuff...
+		$this -> load -> helper(array('language', 'url', 'form', 'account/ssl'));
+		$this -> load -> library(array('account/authentication'));
+		$this -> load -> model(array('account/account_model', 'favorites_model', 'category_model', 'subcategory_model', 'schedule_model', 'rating_model','channel_model'));
+		$this -> lang -> load(array('general'));
+	}
+
+	function index() {
+		$this->session->unset_userdata('filter');
+		$this->session->unset_userdata('subfilter');
+		$this->session->unset_userdata('time');
+		$this->session->unset_userdata('live');
+		$this->session->unset_userdata('shuffle');
+		$this->session->unset_userdata('paid');
+		$this->session->unset_userdata('date');
+		$this->session->unset_userdata('fav');
+		$userid = $this -> session -> userdata('account_id');
+		maintain_ssl();
+		$user_zone = $this -> session -> userdata('user_timezone');
+		$offset = 2 * 60 * 60;
+
+		$local = $this -> session -> userdata('localization');
+		if ($local != NULL) {
+			$offset = $local * 60 * 60;
+		} else if (!empty($user_zone)) {
+			$dtz = new DateTimeZone($user_zone);
+			$time = new DateTime('now', $dtz);
+			$offset = $dtz -> getOffset($time);
+		}
+		$data['offset'] = $offset;
+		
+		date_default_timezone_set('Etc/GMT');
+		// this has been added
+		$data['cur_date'] = time() + $offset;
+		$data['categories'] = $this -> category_model -> getAll();
+		$data['subcategories'] = $this -> subcategory_model -> getAll();
+		
+		
+		////// Repeated ////////
+		date_default_timezone_set('Etc/GMT');
+
+		$user_zone = $this -> session -> userdata('user_timezone');
+		$offset = 2 * 60 * 60;
+
+		$local = $this -> session -> userdata('localization');
+		if ($local != NULL) {
+			$offset = $local * 60 * 60;
+		} else if (!empty($user_zone)) {
+			$dtz = new DateTimeZone($user_zone);
+			$time = new DateTime('now', $dtz);
+			$offset = $dtz -> getOffset($time);
+		}
+		
+		/////////////////////
+		$data['hours'] = date("H", $data['cur_date']);
+		$minutes = date("i", $data['cur_date']);
+		$data['minutes'] = ($minutes > 30 ? 30 : 0);
+		
+		///////////////// Login Rating ///////////////////
+		
+		if(isset($_SERVER['HTTP_REFERER']))
+		{
+			$prev_url = $_SERVER['HTTP_REFERER'];
+			$prev_url = preg_split('/2F/', $prev_url);
+		}
+		
+		
+		$session = $this->session->userdata('rate');
+		if(!empty($session))
+		{
+			$session_rating = $session['value'];
+			$list_id = $session['listing_id'];
+					
+			$curr_listing = $this->uri->segment(2); 		
+			
+			if(isset($prev_url[3]))
+			{
+					if ($this -> rating_model -> get_user_rating($userid, $list_id) == FALSE)
+					$this -> rating_model -> insert($list_id, $userid, $session_rating);
+				 else 
+					$this -> rating_model -> update2($list_id, $userid, $session_rating);
+
+					$this->session->unset_userdata('rate');	
+			}
+
+		
+		}
+		//////////////////////////////////////////////////////
+		
+		$this -> load -> view('home', isset($data) ? $data : NULL);
+	}
+
+	function grid(){
+		$userid = $this -> session -> userdata('account_id');
+		maintain_ssl();
+		$user_zone = $this -> session -> userdata('user_timezone');
+		$offset = 2 * 60 * 60;
+
+		$local = $this -> session -> userdata('localization');
+		if ($local != NULL) {
+			$offset = $local * 60 * 60;
+		} else if (!empty($user_zone)) {
+			$dtz = new DateTimeZone($user_zone);
+			$time = new DateTime('now', $dtz);
+			$offset = $dtz -> getOffset($time);
+		}
+		$data['offset'] = $offset;
+		date_default_timezone_set('Etc/GMT');
+		// this has been added
+		$data['cur_date'] = time() + $offset;
+
+		////////// Repeated ///////////
+		date_default_timezone_set('Etc/GMT');
+
+		$user_zone = $this -> session -> userdata('user_timezone');
+		$offset = 2 * 60 * 60;
+
+		$local = $this -> session -> userdata('localization');
+		if ($local != NULL) {
+			$offset = $local * 60 * 60;
+		} else if (!empty($user_zone)) {
+			$dtz = new DateTimeZone($user_zone);
+			$time = new DateTime('now', $dtz);
+			$offset = $dtz -> getOffset($time);
+		}
+		
+		//////////////////////////////////
+		$filter = $this->session->userdata('filter');
+		$subfilter = $this->session->userdata('subfilter');
+		$time = $this->session->userdata('time');
+		$live = $this->session->userdata('live');
+		$shuffle = $this->session->userdata('shuffle');
+		$paid = $this->session->userdata('paid');
+		$date = $this->session->userdata('date');
+		$fav = $this->session->userdata('fav');
+		
+		$listings = $this -> schedule_model -> getByDateTime($filter, $subfilter, $time, $offset, $live, $paid, $date);
+		
+		////////// Creating List for Plus Channel Listings ///////////////
+		
+		$Channels_With_Plus= $this -> schedule_model -> getAllPlusChannels();
+		
+		$plus_channels = array();
+		$plus_listings = array();
+		
+		foreach ($Channels_With_Plus as $row) {
+				
+			$plus_channels[$row->id] = $this -> schedule_model -> getPlusChannels($row->id);
+			
+			foreach ($plus_channels[$row->id] as $item) {
+				
+			$plus_offset = ($item->offset)*60*60;
+			$plus_listings[$item->original_id] = $this -> schedule_model -> getByDateTimePlus($item->original_id,$filter, $subfilter, $time, $offset, $live, $paid, $date,$plus_offset);
+			
+			foreach ($plus_listings[$item->original_id] as $item2) {
+					
+				$item2->start_time = date('H:i:s',strtotime($item2->start_time)+$plus_offset);
+				$item2->end_time = date('H:i:s',strtotime($item2->end_time)+$plus_offset);
+				$item2->real_id = $item->id;
+				$item2->real_slug = $item->slug;
+				$item2->real_title = $item->title;
+				$listings[] = $item2;
+				}	
+			}
+			
+		} 
+		///////////////////////////////////////////////////////////////////
+		
+		////////// Creating List for HD Channel Listings ///////////////
+		
+		$Channels_HD= $this -> schedule_model -> getAllHDChannels();
+		
+		$HD_channels = array();
+		$HD_listings = array();
+		
+		foreach ($Channels_HD as $item) {
+				
+			$HD_channels[$row->id] = $item;
+			$plus_offset = 0;	
+			$HD_listings[$item->original_id] = $this -> schedule_model -> getByDateTimePlus($item->original_id,$filter, $subfilter, $time, $offset, $live, $paid, $date,$plus_offset);
+			
+			foreach ($HD_listings[$item->original_id] as $item2) {
+				
+				$item2->real_id = $item->id;
+				$item2->real_slug = $item->slug;
+				$item2->real_title = $item->title;
+				$listings[] = $item2;
+				}	
+			
+		}
+		///////////////////////////////////////////////////////////////////
+
+		if(!empty($shuffle))
+		{
+			shuffle($listings);
+			$this->session->unset_userdata('shuffle');
+		}
+		
+		if(!empty($userid))
+			$favorites = $this -> favorites_model -> get_IDs_user($userid);
+		
+		
+		if(!empty($fav)){
+			$listings2 = array();
+			
+			foreach($listings as $listing){
+				if (!empty($favorites) && in_array($listing -> listing_id, $favorites)) {
+					$listings2[] = $listing;
+				}
+			}
+			
+			$listings = $listings2;
+		}
+		
+		foreach ($listings as $listing) {
+
+			$listing -> promoted = 0;
+
+			$currentTime = strtotime(date('h:i A'));
+			$listing -> percentage = 100 - round(((strtotime($listing -> end_time)) - $currentTime) / (strtotime($listing -> end_time) - strtotime($listing -> start_time)) * 100);
+			
+			if ($listing -> percentage > 100) {
+				$listing -> percentage = 100;
+			}
+			
+			if ($listing -> percentage < 0) {
+				$listing -> percentage = 0;
+			}
+			
+			$listing -> start_time = date('h:i A', strtotime($listing -> start_time) + $offset);
+			$listing -> end_time = date('h:i A', strtotime($listing -> end_time) + $offset);
+			$listing -> avg_rating = round($listing -> avg_rating);
+			
+			if ($listing -> promoted == 1) {
+				//put promoted size here
+			} else if ($listing -> avg_rating > 8) {
+				if (!empty($listing -> poster) && file_exists($listing -> poster) && !file_exists('uploads/listings/size2/' . $listing -> listing_id . '.jpg')) {
+					list($width, $height, $type, $attr) = getimagesize($listing -> poster);
+					$this -> load -> library('image_lib');
+					$config['image_library'] = 'gd2';
+					$config['source_image'] = $listing -> poster;
+					$config['maintain_ratio'] = FALSE;
+
+					$config['new_image'] = 'uploads/listings/size2/' . $listing -> listing_id . '.jpg';
+					if ($width < $height) {
+						$config['width'] = 350;
+						$config['height'] = round((350 / $width) * $height);
+					} else {
+						$config['height'] = 256;
+						$config['width'] = round((256 / $height) * $width);
+					}
+
+					$this -> image_lib -> initialize($config);
+					$this -> image_lib -> resize();
+					$this -> image_lib -> clear();
+					$listing->poster_img = 'uploads/listings/size2/' . $listing -> listing_id . '.jpg';
+				}else{
+					if(file_exists('uploads/listings/size2/' . $listing -> listing_id . '.jpg'))
+						$listing->poster_img = 'uploads/listings/size2/' . $listing -> listing_id . '.jpg';
+					else
+						$listing->poster_img = 'resource/img/size2.png';
+				}
+			} else if ($listing -> avg_rating > 6 && $listing -> avg_rating <= 8) {
+				if (!empty($listing -> poster) && file_exists($listing -> poster) && !file_exists('uploads/listings/size3/' . $listing -> listing_id . '.jpg')) {
+					list($width, $height, $type, $attr) = getimagesize($listing -> poster);
+					$this -> load -> library('image_lib');
+					$config['image_library'] = 'gd2';
+					$config['source_image'] = $listing -> poster;
+					$config['maintain_ratio'] = FALSE;
+
+					$config['new_image'] = 'uploads/listings/size3/' . $listing -> listing_id . '.jpg';
+					$config['height'] = 256;
+					$config['width'] = round((256 / $height) * $width);
+				
+					$this -> image_lib -> initialize($config);
+					$this -> image_lib -> resize();
+					$this -> image_lib -> clear();
+					$listing->poster_img = 'uploads/listings/size3/' . $listing -> listing_id . '.jpg';
+				}else{
+					if(file_exists('uploads/listings/size3/' . $listing -> listing_id . '.jpg'))
+						$listing->poster_img = 'uploads/listings/size3/' . $listing -> listing_id . '.jpg';
+					else
+						$listing->poster_img = 'resource/img/size3.png';
+				}
+			} else if ($listing -> avg_rating > 3 && $listing -> avg_rating <= 6) {
+				if (!empty($listing -> poster) && file_exists($listing -> poster) && !file_exists('uploads/listings/size5/' . $listing -> listing_id . '.jpg')) {
+					list($width, $height, $type, $attr) = getimagesize($listing -> poster);
+					$this -> load -> library('image_lib');
+					$config['image_library'] = 'gd2';
+					$config['source_image'] = $listing -> poster;
+					$config['maintain_ratio'] = FALSE;
+
+					$config['new_image'] = 'uploads/listings/size5/' . $listing -> listing_id . '.jpg';
+					$config['width'] = 230;
+					$config['height'] = round((230 / $width) * $height);
+					
+					$this -> image_lib -> initialize($config);
+					$this -> image_lib -> resize();
+					$this -> image_lib -> clear();
+					$listing->poster_img = 'uploads/listings/size5/' . $listing -> listing_id . '.jpg';
+				}else{
+					if(file_exists('uploads/listings/size5/' . $listing -> listing_id . '.jpg'))
+						$listing->poster_img = 'uploads/listings/size5/' . $listing -> listing_id . '.jpg';
+					else
+						$listing->poster_img = 'resource/img/size5.png';
+				}
+			} else {
+				if (!empty($listing -> poster) && file_exists($listing -> poster) && !file_exists('uploads/listings/size7/' . $listing -> listing_id . '.jpg')) {
+					list($width, $height, $type, $attr) = getimagesize($listing -> poster);
+					$this -> load -> library('image_lib');
+					$config['image_library'] = 'gd2';
+					$config['source_image'] = $listing -> poster;
+					$config['maintain_ratio'] = FALSE;
+
+					$config['new_image'] = 'uploads/listings/size7/' . $listing -> listing_id . '.jpg';
+					$config['height'] = 118;
+					$config['width'] = round((118 / $height) * $width);
+
+					$this -> image_lib -> initialize($config);
+					$this -> image_lib -> resize();
+					$this -> image_lib -> clear();
+					$listing->poster_img = 'uploads/listings/size7/' . $listing -> listing_id . '.jpg';
+				}else{
+					if(file_exists('uploads/listings/size7/' . $listing -> listing_id . '.jpg'))
+						$listing->poster_img = 'uploads/listings/size7/' . $listing -> listing_id . '.jpg';
+					else
+						$listing->poster_img = 'resource/img/size7.png';
+				}
+			}
+		}
+
+		$data['listings'] = json_encode($listings);
+		
+		$this -> load -> view('grid', isset($data) ? $data : NULL);
+	}
+
+	function popup(){
+		$userid = $this -> session -> userdata('account_id');
+		$result = $this -> schedule_model -> getPopup($_POST['id'], $_POST['type']);
+		
+		if($_POST['real_id']!='-1')
+		{
+			$real_channel = $this -> channel_model -> get_id($_POST['real_id']);
+			foreach ($real_channel as $row) {
+				
+				$id = $row->id;
+				$slug = $row->slug;
+				$logo = $row->logo;
+				$title = $row->title;
+				$offset = ($row->offset)*60*60;
+			}
+			
+			foreach ($result as $row) {			
+				$row->channel_id = $id;
+				$row->channel_slug = $slug;
+				$row->logo = $logo;
+				$row->channel_title = $title;
+				
+				$start_new = date('H:i:s',strtotime($row->start_time)+$offset);
+				$end_new = date('H:i:s',strtotime($row->end_time)+$offset);
+				
+				$row->start_time = $start_new;
+				$row->end_time = $end_new;
+			}
+		}
+		
+		
+		$userid = $this -> session -> userdata('account_id');
+		maintain_ssl();
+		$user_zone = $this -> session -> userdata('user_timezone');
+		$offset = 2 * 60 * 60;
+
+		$local = $this -> session -> userdata('localization');
+		if ($local != NULL) {
+			$offset = $local * 60 * 60;
+		} else if (!empty($user_zone)) {
+			$dtz = new DateTimeZone($user_zone);
+			$time = new DateTime('now', $dtz);
+			$offset = $dtz -> getOffset($time);
+		}
+		$data['offset'] = $offset;
+		date_default_timezone_set('Etc/GMT');
+		// this has been added
+		$data['cur_date'] = time() + $offset;
+
+		date_default_timezone_set('Etc/GMT');
+
+		$user_zone = $this -> session -> userdata('user_timezone');
+		$offset = 2 * 60 * 60;
+
+		$local = $this -> session -> userdata('localization');
+		if ($local != NULL) {
+			$offset = $local * 60 * 60;
+		} else if (!empty($user_zone)) {
+			$dtz = new DateTimeZone($user_zone);
+			$time = new DateTime('now', $dtz);
+			$offset = $dtz -> getOffset($time);
+		}
+		
+		$result[0]->offset = $offset;
+		
+		if (!empty($result[0] -> logo) && file_exists($result[0] -> logo)  && !file_exists('uploads/channels/49/' . $result[0] -> channel_id . '.jpg')) {
+			list($width, $height, $type, $attr) = getimagesize($result[0] -> logo);
+			$this -> load -> library('image_lib');
+			$config['image_library'] = 'gd2';
+			$config['source_image'] = $result[0] -> logo;
+			$config['maintain_ratio'] = FALSE;
+			$config['new_image'] = 'uploads/channels/49/' . $result[0] -> channel_id . '.jpg';
+			if ($width > $height) {
+				$config['width'] = 49;
+				$config['height'] = round((49 / $width) * $height);
+			} else {
+				$config['height'] = 47;
+				$config['width'] = round((47 / $height) * $width);
+			}
+
+			$this -> image_lib -> initialize($config);
+			$this -> image_lib -> resize();
+			$this -> image_lib -> clear();
+			$result[0]->channel_img = 'uploads/channels/49/' . $result[0] -> channel_id . '.jpg';
+		}else{
+			if(file_exists('uploads/channels/49/' . $result[0] -> channel_id . '.jpg'))
+				$result[0]->channel_img = 'uploads/channels/49/' . $result[0] -> channel_id . '.jpg';
+			else
+				$result[0]->channel_img = 'resource/img/channel_no_logo_60.png';
+		}
+		
+		if (!empty($result[0] -> poster) && file_exists($result[0] -> poster) && !file_exists('uploads/listings/size1/' . $result[0] -> listing_id . '.jpg')) {
+				list($width, $height, $type, $attr) = getimagesize($result[0] -> poster);
+				$this -> load -> library('image_lib');
+				$config['image_library'] = 'gd2';
+				$config['source_image'] = $result[0] -> poster;
+				$config['maintain_ratio'] = FALSE;
+
+				$config['new_image'] = 'uploads/listings/size1/' . $result[0] -> listing_id . '.jpg';
+				if ($width < $height) {
+					$config['width'] = 470;
+					$config['height'] = round((470 / $width) * $height);
+				} else {
+					$config['height'] = 394;
+					$config['width'] = round((394 / $height) * $width);
+				}
+
+				$this -> image_lib -> initialize($config);
+				$this -> image_lib -> resize();
+				$this -> image_lib -> clear();
+				$result[0]->poster_img = 'uploads/listings/size1/' . $result[0] -> listing_id . '.jpg';
+			}else{
+				if(file_exists('uploads/listings/size1/' . $result[0] -> listing_id . '.jpg'))
+					$result[0]->poster_img = 'uploads/listings/size1/' . $result[0] -> listing_id . '.jpg';
+				else
+					$result[0]->poster_img = 'resource/img/size1.png';
+			}
+		
+		$user_rating = 0;
+		$favorite = 0;
+		
+		if(!empty($userid)){
+			$user_rating = $this -> rating_model -> getUserRatingById($userid, $result[0]->listing_id);
+			$favorite = $this -> favorites_model -> userFavorite($userid, $result[0]->listing_id);
+		}
+		
+		$result[0]->user_rating = $user_rating;
+		$result[0]->favorite = $favorite;
+		
+		$result[0]->avg_rating = round($this -> rating_model -> get_average_listing($result[0]->listing_id));
+		
+		$this->load->view('popup.php', $result[0]);
+	}
+}

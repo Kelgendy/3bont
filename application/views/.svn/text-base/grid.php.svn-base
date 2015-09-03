@@ -1,0 +1,7 @@
+<script type="text/javascript">
+	var shows = <? echo $listings; ?>;
+</script>
+<? include("gridLayout.php"); ?>
+<div class="black_overlay"></div>
+<div class="container_24" id="container"></div>
+<div class="clear"></div>

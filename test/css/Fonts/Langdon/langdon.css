@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'LangdonRegular';
+    src: url('langdon.eot');
+    src: url('langdon.eot') format('embedded-opentype'),
+         url('langdon.woff') format('woff'),
+         url('langdon.ttf') format('truetype'),
+         url('langdon.svg#LangdonRegular') format('svg');
+}

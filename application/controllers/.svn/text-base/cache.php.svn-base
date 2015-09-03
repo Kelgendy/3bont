@@ -1,0 +1,39 @@
+<?php
+class Cache extends CI_Controller {
+	
+	function clear()
+	{
+		$directories = array(
+			"uploads/channels/47",
+			"uploads/channels/49",
+			"uploads/channels/60",
+			"uploads/channels/89",
+			"uploads/channels/115",
+			"uploads/channels/thumbs",
+			"uploads/listings/98",
+			"uploads/listings/110",
+			"uploads/listings/310",
+			"uploads/listings/favorites",
+			"uploads/listings/fb",
+			"uploads/listings/size1",
+			"uploads/listings/size2",
+			"uploads/listings/size3",
+			"uploads/listings/size4",
+			"uploads/listings/size5",
+			"uploads/listings/size6",
+			"uploads/listings/size7"
+		);
+		
+		foreach($directories as $dir){
+			echo "Clearing: ".$dir."<br/>";
+		    foreach(glob($dir . '/*') as $file) {
+		        if(is_dir($file))
+		            rrmdir($file);
+		        else
+		            unlink($file);
+		    }
+		}
+		
+		echo "OK";
+	}
+}

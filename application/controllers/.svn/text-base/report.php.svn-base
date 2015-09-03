@@ -1,0 +1,198 @@
+<?php
+class Report extends CI_Controller {
+	
+	function singleonsingle()
+	{
+		
+		$date = date("Y-m-d");
+		$end_date = date("Y-m-d", (strtotime($date)+14*24*60*60));
+		$sql = "SELECT listing_id, channel_id, dtv_channel.title AS channel_title, dtv_listing.title AS listing_title, start_datetime, end_datetime FROM dtv_schedule_single JOIN dtv_listing ON dtv_listing.id = listing_id JOIN dtv_channel on dtv_channel.id = channel_id WHERE dtv_channel.hidden = 0 AND end_datetime > '".$date."' AND end_datetime <= '".$end_date."'";
+		
+		$query = $this->db->query($sql);
+		
+		$rows = $query->result();
+		
+		$data = array();
+		foreach($rows as $row){
+				$sql = "SELECT listing_id, dtv_listing.title AS listing_title,  start_datetime, end_datetime  FROM dtv_schedule_single JOIN dtv_listing ON dtv_listing.id = listing_id  WHERE channel_id = ".$row->channel_id." AND listing_id != ".$row->listing_id." AND ((start_datetime >= '".$row->start_datetime."' AND start_datetime <'".$row->end_datetime."') OR (end_datetime > '".$row->start_datetime."' AND end_datetime <= '".$row->end_datetime."'))";
+				$query = $this->db->query($sql);
+				if($query->num_rows()>0){
+					$this_array = array();
+					
+					//echo "<h1>Channel: ".$row->channel_title.", Listing: ".$row->listing_title.", ID(".$row->listing_id.")</h1><br/>";
+					//echo "<p><b>Start date/time: ".$row->start_datetime.", End date/time: ".$row->end_datetime."</b></p><br/>";
+	
+					
+					//echo "<h2>Overlapping Listings rows</h2><br/>";
+					$results  = $query->result();
+					
+					$this_array['row'] = $row;
+					$this_array['matches'] = $results;
+					$data[] = $this_array;
+					// foreach($results as $result){
+						// echo "<p><b>Title: ".$result->listing_title.", ID(".$result->listing_id.")</b></p><br/>";
+						// echo "<p>Start date/time: ".$result->start_datetime.", End date/time: ".$result->end_datetime."</p><br/>";
+					// }
+					// echo "<hr/>";
+				}
+				
+		}
+		$toReturn['results'] = $data;
+		$this->load->view('report_header.php', $toReturn);
+		$this->load->view('report_footer.php');
+	}
+	
+	function singleonrecurring()
+	{
+		$date = date("Y-m-d");
+		$sql = "SELECT listing_id, channel_id, dtv_channel.title AS channel_title, dtv_listing.title AS listing_title, start_datetime, end_datetime, time(start_datetime) AS starttime, time(end_datetime) AS endtime, date(end_datetime) AS enddate FROM dtv_schedule_single JOIN dtv_listing ON dtv_listing.id = listing_id JOIN dtv_channel on dtv_channel.id = channel_id  WHERE dtv_channel.hidden = 0 AND end_datetime >= '".$date."'";
+		
+		$query = $this->db->query($sql);
+		
+		$rows = $query->result();
+		
+		$data = array();
+		foreach($rows as $row){
+				$startDay = date('N', strtotime($row->start_datetime));
+				$endDay = date('N', strtotime($row->end_datetime));
+				$sql = "SELECT listing_id, dtv_listing.title AS listing_title,  starttime AS start_datetime, endtime AS end_datetime FROM dtv_schedule_repeat JOIN dtv_listing ON dtv_listing.id = listing_id  WHERE enddate >= '".$row->enddate."' AND channel_id = ".$row->channel_id." AND listing_id != ".$row->listing_id." AND ((starttime >= '".$row->starttime."' AND starttime <'".$row->endtime."' AND day = ".$startDay.") OR (endtime > '".$row->starttime."' AND endtime <= '".$row->endtime."' AND day = ".$startDay.") OR (endtime > '".$row->starttime."' AND endtime <= '".$row->endtime."' AND day = ".$endDay."))";
+				$query = $this->db->query($sql);
+				if($query->num_rows()>0){
+					$this_array = array();
+					
+					$results  = $query->result();
+					
+					$this_array['row'] = $row;
+					$this_array['matches'] = $results;
+					$data[] = $this_array;
+				}
+				
+		}
+		$toReturn['results'] = $data;
+		$this->load->view('report_header.php', $toReturn);
+		$this->load->view('report_footer.php');
+	}
+
+	function recurringonrecurring()
+	{
+		$date = date("Y-m-d");
+		$sql = "SELECT listing_id, channel_id, dtv_channel.title AS channel_title, dtv_listing.title AS listing_title, starttime, endtime, enddate, startdate, day FROM dtv_schedule_repeat JOIN dtv_listing ON dtv_listing.id = listing_id JOIN dtv_channel on dtv_channel.id = channel_id  WHERE dtv_channel.hidden = 0 AND enddate >= '".$date."'";
+		
+		$query = $this->db->query($sql);
+		
+		$rows = $query->result();
+		
+		$data = array();
+		foreach($rows as $row){
+				
+				$sql = "SELECT listing_id, dtv_listing.title AS listing_title,  starttime AS start_datetime, endtime AS end_datetime FROM dtv_schedule_repeat JOIN dtv_listing ON dtv_listing.id = listing_id WHERE startdate <='".$row->startdate."' AND enddate >= '".$row->enddate."' AND channel_id = ".$row->channel_id." AND listing_id != ".$row->listing_id." AND ((starttime >= '".$row->starttime."' AND starttime <'".$row->endtime."' AND day = ".$row->day.") OR (endtime > '".$row->starttime."' AND endtime <= '".$row->endtime."' AND day = ".$row->day."))";
+				$query = $this->db->query($sql);
+				if($query->num_rows()>0){
+					$this_array = array();
+					
+					$results  = $query->result();
+					switch($row->day){
+						case 1:
+						$row->start_datetime = "Monday ".$row->starttime;
+						$row->end_datetime = "Monday ".$row->endtime;
+						break;
+						case 2:
+						$row->start_datetime = "Tuesday ".$row->starttime;
+						$row->end_datetime = "Tuesday ".$row->endtime;
+						break;
+						case 3:
+						$row->start_datetime = "Wednesday ".$row->starttime;
+						$row->end_datetime = "Wednesday ".$row->endtime;
+						break;
+						case 4:
+						$row->start_datetime = "Thursday ".$row->starttime;
+						$row->end_datetime = "Thursday ".$row->endtime;
+						break;
+						case 5:
+						$row->start_datetime = "Friday ".$row->starttime;
+						$row->end_datetime = "Friday ".$row->endtime;
+						break;
+						case 6:
+						$row->start_datetime = "Saturday ".$row->starttime;
+						$row->end_datetime = "Saturday ".$row->endtime;
+						break;
+						case 7:
+						$row->start_datetime = "Sunday ".$row->starttime;
+						$row->end_datetime = "Sunday ".$row->endtime;
+						break;
+					}
+					$this_array['row'] = $row;
+					$this_array['matches'] = $results;
+					$data[] = $this_array;
+				}
+				
+		}
+		$toReturn['results'] = $data;
+		$this->load->view('report_header.php', $toReturn);
+		$this->load->view('report_footer.php');
+	}
+
+	function emptyPosters(){
+		$sql = "SELECT * FROM `dtv_listing` WHERE poster = '' ORDER BY category";
+		
+		$query = mysql_query($sql);
+		echo '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><head><body>';
+		while($row=mysql_fetch_array($query)){
+			
+			echo "<p style='font-family: Arial; font-size: 14px;'>".anchor('admin/listing/edit/'.$row['id'], $row['id']." - ".$row['title'], 'target="_blank"')."</p>";
+			
+		}
+		echo '</body></html>';
+	}
+	
+	function nextday(){
+		$sql = "SELECT * FROM `dtv_schedule_repeat` JOIN dtv_listing ON dtv_listing.id = dtv_schedule_repeat.listing_id WHERE (endtime < starttime AND nextday = 0 AND (enddate > '2013-01-06' OR enddate = '0000-00-00')) OR (starttime < endtime AND nextday = 1 AND (enddate > '2013-01-06' OR enddate = '0000-00-00')) GROUP BY group_id;";
+		
+		$query = mysql_query($sql);
+		echo '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><head><body>';
+		while($row=mysql_fetch_array($query)){
+			
+			echo "<p style='font-family: Arial; font-size: 14px;'>".anchor('admin/schedule/edit_repeat/'.$row['channel_id'].'/'.$row['listing_id'].'/'.$row['group_id'], $row['id']." - ".$row['title'], 'target="_blank"')."</p>";
+			
+		}
+		echo '</body></html>';
+	}
+	
+	function lowquality(){
+		error_reporting(0);
+		$sql = "SELECT * FROM `dtv_listing` WHERE poster != '' ORDER BY category";
+		
+		$query = mysql_query($sql);
+		echo '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><head><body>';
+		$i = 1;
+		$iArray = array();
+		$idArray = array();
+		$titleArray = array();
+		$widthArray = array();
+		$heightArray = array();
+		while($row=mysql_fetch_array($query)){
+			list($width, $height, $type, $attr) = getimagesize($row['poster']);
+			
+			if($width < 470){
+				//echo "<p style='font-family: Arial; font-size: 14px;'>".anchor('admin/listing/edit/'.$row['id'], $i." - ".$row['title'], 'target="_blank"')."</p>";
+				//$array[] = array($i, $row['id'], $row['title'], $width, $height);
+				//$iArray[] = $i;
+				$idArray[] = $row['id'];
+				$titleArray[] = $row['title'];
+				$widthArray[] = $width;
+				$heightArray[] = $height;
+				$i++;
+			}
+		}
+		
+		array_multisort($widthArray, SORT_ASC, $idArray, $heightArray, $titleArray);
+		
+		$i = 0;
+		
+		while($i < count($idArray)){
+			echo "<p style='font-family: Arial; font-size: 14px; direction: rtl'>".anchor('admin/listing/edit/'.$idArray[$i], ($i+1)." - ".$titleArray[$i]." ".$widthArray[$i]."x".$heightArray[$i], 'target="_blank"')."</p>";
+			$i++;
+		}
+		echo '</body></html>';
+	}
+}

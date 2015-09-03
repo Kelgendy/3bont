@@ -1,0 +1,1 @@
+<?php echo sprintf(lang('new_account_email'), $username); ?>

@@ -1,0 +1,12 @@
+<?php
+class Timezone extends CI_Controller {
+	
+	function index()
+	{
+		if(isset($_POST['select_zone'])){
+			$this->session->set_userdata('localization', $_POST['select_zone']);
+			redirect($_POST['testt']);
+		}
+		
+	}
+}

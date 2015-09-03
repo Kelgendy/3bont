@@ -1,0 +1,314 @@
+.custom_table
+{
+    width: 4074px;
+    background-color: transparent;
+    
+}
+
+.custom_div
+{
+    float: left;
+    border: 1px solid #dddddd;
+    border-radius: 1px;
+    background-color: #84B3F0;
+    color:white;
+    border-radius: 5px;
+    width: 113px;
+    text-align: center;
+}
+
+.custom_div2
+{
+    float: left;
+    border: 1px solid #dddddd;
+    border-radius: 1px;
+    color:white;
+    border-radius: 5px;
+    width: 385px;
+    text-align: center;
+    height:22px;
+    margin-top:-1px;
+}
+.custom_div2 div
+{
+    cursor: default;
+}
+.abs_days
+{
+float: left;
+    width:52px;
+
+    background-color: #811BE0;
+
+    border-radius: 1px;
+    color:white;
+    border-radius: 5px;
+}
+
+.custom_div3
+{
+float:left;
+    border-radius: 1px;
+    background-color: #84B3F0;
+    color:white;
+    border-radius: 5px;
+    width: 109px;
+    text-align: center;
+   
+}
+
+.month_div
+{
+    float: left; 
+    margin-right: 11px; 
+    margin-left: 2px;
+    color: black;
+    border-radius: 3px;
+}
+
+.disabled
+{
+    cursor: default;
+}
+
+.my_btn
+{
+    display:block;
+    margin-top:5px;
+}
+
+.emp_sheet_main_div
+{
+
+    width: 100%;
+max-width: 450px;
+min-width: 450px;
+margin-top: 22px; 
+height:30px;
+margin: 0 auto;
+margin-left: auto;
+margin-right: auto;
+margin-bottom: 30px;
+position: relative;
+}
+
+.employer_div
+{
+    float: left;
+    width: 285px;
+}
+
+.employer_div .controls
+{
+    width: 251px;
+    margin-left: 0px;
+}
+
+.employer_div .control-label
+{
+    width: 80px;
+    margin-left: 0px;
+}
+
+.year_div
+{
+    float: left;
+    width: 153px;
+}
+
+.year_div .controls
+{
+    width: 113px;
+    margin-left: 2px;
+}
+
+.year_div .control-label
+{
+    width: 40px;
+    margin-left: 0px;
+}
+
+.user_info
+{
+    float: left;
+    width: auto;
+    border: 1px solid #dddddd;     
+    border-radius:5px;
+    position: relative;     
+    background-color:#fff;
+    margin-right: 20px;
+    margin-left: 5px;
+
+}
+
+.user_info .control-label
+{
+    width:142px;
+    text-align: center;
+}
+
+.legend_div
+{
+    border: 1px solid #dddddd; 
+    width: 120px; 
+    border-radius:5px;
+    position: relative;
+    padding-top: 5px;
+    float: right;
+    background-color:#fff;
+    margin-right: 5px;
+}
+
+.legend_div2
+{
+    border: 1px solid #dddddd; 
+    width: 141px; 
+    border-radius:5px;
+    position: relative;
+    margin-top: 60px;
+    float: right;
+    background-color:#fff;
+}
+
+.pending_div
+{
+    width: 10px;
+    height: 10px; 
+    background-color:#868A84;
+    float: left;
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.approved_div
+{
+    width: 10px;
+    height: 10px; 
+    background-color:#57C732;
+    float: left;
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.disapproved_div
+{
+    width: 10px;height: 10px; background-color:#F24D41;float: left;margin-top: 5px;margin-left: 5px;
+}
+
+.holidays_div
+{
+    width: 10px;height: 10px; background-color:#E49DF2;float: left;margin-top: 5px;margin-left: 5px;
+}
+
+.weekends_div
+{
+    width: 10px;height: 10px; background-color:#84B3F0;float: left;margin-top: 5px;margin-left: 5px;
+}
+
+.month_td
+{
+    color:black;text-align: center;
+}
+
+.month_td input
+{
+    width: 24px; background-color: white; text-align: center;
+}
+
+.finance_table tr
+{
+    height:145px;
+}
+.finance_table input
+{
+    width: 84px;
+    height: 84px;
+}
+.details_div
+{
+    width: 98px;
+    height: 148px;
+}
+.Container{
+        width: 100%;
+max-width: 1300px;
+min-width: 1300px;
+height: 100%;
+margin: 0 auto -90px;
+margin-left: auto;
+margin-right: auto;
+position: relative;
+
+}
+
+.Container2{
+        width: 100%;
+max-width: 1147px;
+min-width: 1147px;
+height: 100%;
+margin: 0 auto -90px;
+margin-left: auto;
+margin-right: auto;
+position: relative;
+
+}
+
+.Container3{
+        width: 100%;
+max-width: 940px;
+min-width: 940px;
+height: 100%;
+margin: 0 auto -90px;
+margin-left: auto;
+margin-right: auto;
+position: relative;
+
+}
+.Container4{
+        width: 100%;
+max-width: 1130px;
+min-width: 1130px;
+height: 100%;
+margin: 0 auto -90px;
+margin-left: auto;
+margin-right: auto;
+position: relative;
+
+}
+
+.main_table{
+    width: 100%;
+max-width: 1004px;
+min-width: 1004px;
+height: 100%;
+position: relative;
+}
+.main_table .table  select
+{
+    width:94px !important;
+}
+
+.main_table2{
+    width: 100%;
+max-width: 996px;
+min-width: 996px;
+height: 100%;
+position: relative;
+}
+.main_table2 .table  select
+{
+    width:94px !important;
+}
+
+.reply_req
+{
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.cancel_button
+{
+    position: relative;
+    float: right;
+    cursor:pointer;
+}

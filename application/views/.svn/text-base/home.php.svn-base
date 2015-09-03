@@ -1,0 +1,16 @@
+<?php echo $this->load->view('header_home'); ?>
+       
+    </div>
+    <div id="loading_home">
+    	<div class="loading_img"><img src="<?=base_url()?>resource/css/images/ajax-loader.gif"></img></div>
+    </div>
+    <div id="content_container">	
+    </div>
+    <div class="container_24">
+    	<div class="grid_24">
+    		<p id="home_text" >دليلك دوت تي في Daleelak.tv موقع يقدم لك جداول مواعيد القنوات الفضائية, مواعيد أحدث الافلام المصرية و الاجنبية علي القنوات الفضائية, المسلسلات و المسرحيات العربية, البرامج الفضائية  الرياضية و مواعيد برامج التوك شو الحوارية.</p>
+    	</div>
+    </div>
+<div class="clear"></div>
+<? include("fancybox.php"); ?>
+<?php echo $this->load->view('footer'); ?>

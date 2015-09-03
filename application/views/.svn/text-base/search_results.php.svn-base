@@ -1,0 +1,215 @@
+<? include ("header.php"); ?>
+  <script>
+  	$(document).ready(function() {
+  	$('.channels').hide();	
+  	
+	$('#channels').click(function(event) {
+	event.preventDefault();
+	$('#channels').addClass("current");
+	$('#shows').removeClass("current");
+	$('.listings').hide();
+	$('.channels').show();
+	});
+	
+	$('#shows').click(function(event) {
+	event.preventDefault();
+	$('#shows').addClass("current");
+	$('#channels').removeClass("current");
+	$('.channels').hide();
+	$('.listings').show();
+
+	});
+	
+	$('.cat_filter').children('a').click(function(event) {
+	event.preventDefault();
+	if($(this).parent().hasClass('cat_selected')){
+					$('.cat_selected').removeClass('cat_selected');
+					$('.channel_schedule_grid_row').show();
+				}else{
+					var value = $(this).attr('href');
+					var toRemove = '#cat';
+					var id = value.replace(toRemove,'');
+					$('.cat_selected').removeClass('cat_selected');
+					$(this).parent().addClass('cat_selected');
+					filterSubCats(id);
+				}
+				
+				return false;
+	
+	});
+	
+	<? if($this -> session -> userdata('account_id') !== FALSE) { ?>
+	$('.channel_schedule_icon_fav').click(function(event) {
+	    event.preventDefault();
+	    var href = $(this).attr("href");
+    	var linkTo = href.substring(1);
+	    $this_icon= $(this);
+	    $.ajax({
+			url: '<?=site_url('favorite/add') ?>',
+			type: "GET",
+			data: {id:linkTo},
+			success:function(response){
+				$this_icon.toggleClass("selected");
+			},
+			error:function (xhr, textStatus, thrownError){
+				alert("xhr status: " + xhr.statusText);
+			}
+		});
+	});
+	
+<? } else { ?>
+	$('.channel_schedule_icon_fav').fancybox({
+		height :150,
+		width: 500,
+		autoSize: false,
+		wrapCSS    : 'daleelak_modal',
+		closeClick : true,
+		href: "#modal",
+		helpers : {
+			title : {
+				type : 'inside'
+			}
+		}
+	});
+<? } ?>	
+	
+	
+	});
+	
+	function filterSubCats(id){
+			$('.search_noresults').hide();
+			switch(id)
+			{
+			case '1':
+			  
+			  $('.channel_schedule_grid_row').hide();
+			  $("#nolistings").hide();
+			  if($('.1').length == 0)
+			  	$("#nolistings").show();
+			  $('.1').show();
+			  break;
+			case '2':
+			   $('.channel_schedule_grid_row').hide();
+			   if($('.2').length == 0)
+			  	$("#nolistings").show();
+			  $('.2').show();
+			  break;
+			case '3':
+			  $('.channel_schedule_grid_row').hide();
+			  if($('.3').length == 0)
+			  	$("#nolistings").show();
+			  $('.3').show();
+			  break;
+			case '4':
+			  $('.channel_schedule_grid_row').hide();
+			  if($('.4').length == 0)
+			  	$("#nolistings").show();
+			  $('.4').show();
+			  break;
+			case '5':
+			  $('.channel_schedule_grid_row').hide();
+			  if($('.5').length == 0)
+			  	$("#nolistings").show();
+			  $('.5').show();
+			  break;
+			default:
+			}
+		}
+	
+  </script>
+  <div class="grid_24">
+    <div class="page_title">نتيجة البحث</div>
+  </div>
+  <!-- end grid_24 -->
+  
+  <div class="grid_24">
+
+    <div class="clear"></div>
+    <P class="search-result-header">تم البحث عن &quot;<?=$key?>&quot;</P>
+    <p class="search-result-header">الناتج <span class="highlight"><?=$s_listings?></span> عروض و <span class="highlight"><?=$s_channels?></span> قنوات</p>
+    <ol id="toc">
+      <li class="current" id="shows"><a href="search_result_shows.html"><span>العروض</span></a></li>
+      <li class="" id="channels"><a href="search_result_channels.html"><span>القنوات</span></a></li>
+    </ol>
+        <!---------------------------------Channels --------------------------------->
+    <div class="content channels">
+      <div class="channels_logos2">
+      	<?php 
+      	if(!empty($channels))
+      	foreach($channels as $channel){?>
+        <div class="channels_item_contanier">
+          <div class="channels_item">
+         <?=anchor('channels/'.$channel->slug,(empty($channel->logo) ? img(array('src'=>'resource/img/channel_no_logo.png','border'=>'0','alt'=>'Home')) : img(array('src'=>'uploads/channels/115/'.$channel->id.'.jpg','border'=>'0','alt'=>'Home'))));?>
+            <p><?=$channel->title?></p>
+          </div>
+        </div>
+        <?php } ?>
+        <?  
+        if(!empty($too_low)) {?><div class="search_noresults"><span>رجاء إدخل كلمة بحث أطول</span></div> <? }
+        
+        else if(empty($channels)) {?><div class="search_noresults"><span>لا توجد نتائج</span></div> <? } ?>
+        <div class="search_noresults" id="nolistings"><span>لا توجد نتائج</span></div>
+      </div>
+      <div class="clear"></div>
+    </div>
+  <!---------------------------------End OF Channels---------------------------------------------------->
+  
+   <!--------------------------------- Listings  --------------------------------->
+    <div class="content listings">
+      <div class="search_filter">
+      	<div class="search_filter_title">تصنيف البحث : </div>
+      	<div class="cat_filter"><a href="#cat2" title="أفلام"><span class="aflam"></span><span>أفلام</span></a></div>
+      	<div class="cat_filter"><a href="#cat1" title="برامج"><span class="programs"></span><span>برامج</span></a></div>
+      	<div class="cat_filter"><a href="#cat5" title="رياضة"><span class="sports"></span><span>رياضة</span></a></div>
+      	<div class="cat_filter"><a href="#cat3" title="مسلسلات"><span class="series"></span><span>مسلسلات</span></a></div>
+      	<div class="cat_filter"><a href="#cat4" title="مسرحيات"><span class="plays"></span><span>مسرحيات</span></a></div>
+        <div class="clear"></div>
+      </div>
+      
+      <div class="channel_schedule_grid">
+      
+      	<?if(!empty($listings))
+      	foreach($listings as $listing){?>
+
+        <div class="channel_schedule_grid_row <?=$listing->category_id?>" >
+        	
+          <div class="channel_schedule_grid_sep"></div>
+          <div class="channel_schedule_grid_img">
+          		<a href="<?=site_url("listings/".$listing->slug)?>">
+                <img width="98" height="82" style="background-image:url(<?= (file_exists('uploads/listings/98/'.$listing -> id.'.jpg') ? 'uploads/listings/98/'.$listing -> id.'.jpg' : 'resource/img/nologo_98.png')?>); background-size: cover; background-position: center; background-color: #000"/>
+                </a>
+          	</div>
+          <div class="channel_schedule_grid_details2"> <span class="channel_schedule_grid_showname"><a href="<?=site_url("listings/".$listing->slug)?>"><?=$listing->title?></a></span>
+            <div class="<?=($listing -> category_id == 1) ? 'programs' : (($listing -> category_id == 2) ? 'aflam' : (($listing -> category_id == 3) ? 'series' : (($listing -> category_id == 4) ?
+      'plays' : 'sports')))?>"><span><?=$listing->category?></span></div>
+            <p class="channel_schedule_grid_description"><?=$listing->s_description?></p>
+          </div>
+          <div class="channel_schedule_grid_icons2">
+          	<?php if(in_array($listing->id, $favorites)){?>
+                		  <a href="#<?=$listing ->id ?>"  class="channel_schedule_icon_fav selected"></a>   
+                	<?php }else{ ?>
+                			<a href="#<?=$listing ->id ?>"  class="channel_schedule_icon_fav "></a>  
+                	<?php } ?>
+
+        </div>
+         </div>
+               		  <div class="clear"></div>
+        <?php }?>
+        <?  
+        if(!empty($too_low)) {?><div class="search_noresults"><span>رجاء إدخل كلمة بحث أطول</span></div> <? }
+        
+		else if(empty($listings)) {?><div class="search_noresults"><span>لا توجد نتائج</span></div> <? } ?>
+        <div class="search_noresults" id="nolistings"><span>لا توجد نتائج</span></div>
+       <div class="clear"></div>
+      </div>
+      
+    </div><?php //echo $this->pagination->create_links(); ?>
+   <!------------------------------------End OF Listings------------------------------------------>
+</div>
+  <!-- end grid_24 -->
+  
+  <div class="clear"></div>
+
+<!-- end .container_24 -->
+<? include ("fancybox.php"); ?>
+<? include ("footer.php"); ?>

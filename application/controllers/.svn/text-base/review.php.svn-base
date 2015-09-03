@@ -1,0 +1,99 @@
+<?php
+
+class Review extends CI_Controller {
+
+	function __construct() {
+		parent::__construct();
+
+		// Load the necessary stuff...
+		$this -> load -> helper(array('language', 'url', 'form', 'account/ssl'));
+		$this -> load -> library(array('account/authentication', 'pagination'));
+		$this -> load -> model(array('account/account_model', 'account/account_details_model', 'reviews_model', 'rating_model', 'listing_model'));
+		$this -> lang -> load(array('general'));
+	}
+
+	function index() {
+		if ($this -> authentication -> is_signed_in()) {
+			$userid=$this -> session -> userdata('account_id');
+			$config['base_url'] = 'index.php/review/index/';
+			$config['per_page'] = 10;
+			$config['total_rows'] = $this -> reviews_model -> countAll_user($userid);
+			$config['num_links'] = 10;
+			$config['full_tag_open'] = '<div class="channels_navigation_contanier">';
+			$config['full_tag_close'] = '</div>';
+			$config['cur_tag_open'] = '<a class="selected">';
+			$config['cur_tag_close'] = '</a>';
+			$config['uri_segment'] = 3;
+			$data['records'] = $this -> reviews_model -> get_userP($userid,$config['per_page'], $this -> uri -> segment(3));
+			$data['account'] = $this -> account_model -> get_by_id($userid);
+			$data['account_details'] = $this -> account_details_model -> get_by_account_id($this -> session -> userdata('account_id'));
+			$data['title'] = "تقييماتي";
+			$this -> pagination -> initialize($config);
+			$this -> load -> view('my_reviews', $data);
+		} else {
+			redirect('account/sign_in/?continue=' . urlencode(base_url() . 'index.php/review'));
+		}
+	}
+
+	function add() {
+		if ($this -> authentication -> is_signed_in()) {
+			$data['account'] = $this -> account_model -> get_by_id($this -> session -> userdata('account_id'));
+			$this -> load -> view('reviews_add', $data);
+		} else {
+			redirect('account/sign_in/?continue=' . urlencode(base_url() . 'index.php/review/add'));
+		}
+	}
+
+	function insert() {
+		$review = $_GET['review'];
+		$review_title = $_GET['review_title'];
+		$listing_id = $_GET['listing_id'];
+
+		$userid = $this -> session -> userdata('account_id');
+		$rating_id = $this -> rating_model -> get_user_rating_id($userid, $listing_id);
+		if (!empty($rating_id)) {
+			$this -> reviews_model -> insert($userid, $rating_id -> id, $listing_id, $review_title, $review);
+			echo 1;
+		} else {
+			echo 0;
+		}
+
+	}
+
+	function edit() {
+		$userid = $this -> session -> userdata('account_id');
+		$id = $_POST['id'];
+		$review = $_POST['review'];
+		$review_title = $_POST['review_title'];
+
+		$this -> reviews_model -> update($id, $userid, $_POST['rating_id'], $review_title, $review);
+		echo $review;
+	}
+
+	function remove() {
+		$id = $_POST['id'];
+		$this -> reviews_model -> remove($id);
+		echo "deleted";
+	}
+
+	function listing() {
+		$data['title'] = "التقييمات";
+		$slug = $this -> uri -> segment(3);
+		$q = $this -> listing_model -> fetch_id($slug);
+		$listingid = $q[0] -> id;
+		$config['base_url'] = 'index.php/review/listing/' . $slug . '/';
+		$config['per_page'] = 10;
+		$config['total_rows'] = $this -> reviews_model -> countAll_listing($listingid);
+		$config['num_links'] = 10;
+		$config['full_tag_open'] = '<div class="channels_navigation_contanier">';
+		$config['full_tag_close'] = '</div>';
+		$config['cur_tag_open'] = '<a class="selected">';
+		$config['cur_tag_close'] = '</a>';
+		$config['uri_segment'] = 4;
+		$data['records'] = $this -> reviews_model -> get_listingP($listingid, $config['per_page'], $this -> uri -> segment(4));
+		$data['title'] = "تقييم ".$data['records'][0]->title;
+		$this -> pagination -> initialize($config);
+		$this -> load -> view('reviews', $data);
+	}
+
+}

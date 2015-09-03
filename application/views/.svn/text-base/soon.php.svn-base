@@ -1,0 +1,27 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>دليلك دوت تي في - Daleelak.TV |  قريبا موقع دليلك دوت تى فى</title>
+<style>
+.button a, .button a:visited{ background:url(images/button2.png) no-repeat; height:41px; width:300px; display:block; margin:20px auto; text-align:center; line-height:3; font-family:'GEDinarTwo-Medium', arial; color:#3b3b3b; text-shadow:1px 1px 1px #fff; font-size:15px; text-decoration:none}
+@font-face {
+    font-family: 'GEDinarTwo-Medium';
+    src: url('font/ge_dinar_two_medium_0.eot');
+    src: url('font/ge_dinar_two_medium_0.eot?#iefix') format('embedded-opentype'),
+         url('font/ge_dinar_two_medium_0.woff') format('woff'),
+         url('font/ge_dinar_two_medium_0.ttf') format('truetype'),
+         url('font/ge_dinar_two_medium_0.svg#ge_dinar_two_medium_0') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+ 
+</style>
+</head>
+
+<body style="background:#000">
+	<div style="width:984px; margin:0 auto"><img src="images/soon.jpg" /></div>
+    <div class="button"><a href="ramadan">إحصائية تغريدات مسلسلات رمضان على تويتر</a></div>
+</body>
+</html>

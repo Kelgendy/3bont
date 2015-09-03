@@ -1,0 +1,190 @@
+<?php
+
+class Search extends CI_Controller {
+
+	function __construct() {
+		parent::__construct();
+
+		// Load the necessary stuff...
+		$this -> load -> helper(array('language', 'url', 'form', 'account/ssl'));
+		$this -> load -> library(array('account/authentication','pagination','session'));
+		$this -> load -> model(array('account/account_model', 'channel_model', 'listing_model','favorites_model'));
+		$this -> lang -> load(array('general'));
+	}
+
+	function index() {
+			
+		if(!empty($_SERVER['HTTP_REFERER']))
+		{
+			if(!empty($_POST))
+			{
+				$this->session->set_userdata('search', $_POST['search']);
+			}
+			else if($this->session->userdata('search')=='')
+			{
+				redirect();
+			}
+		}
+		
+		else	
+		{
+			$this->session->unset_userdata('search');	
+			redirect();
+		}
+		
+		$key = trim($this->session->userdata('search'));
+		
+		$data['key'] = $key;
+		$arabic1 = 'فى في كل لم لن له من هو هي قوة كما لها منذ وقد ولا نفسه لقاء مقابل هناك وقال وكان نهاية وقالت وكانت للامم فيه كلم لكن وفي وقف ولم ومن وهو وهي يوم فيها منها مليار لوكالة يكون يمكن مليون حيث اكد الا اما امس السابق التى التي اكثر ايار ايضا ثلاثة الذاتي الاخيرة الثاني الثانية الذى الذي الان امام ايام خلال حوالى الذين الاول الاولى بين ذلك دون حول حين الف الى انه اول ضمن انها جميع الماضي الوقت المقبل اليوم ـ ف و قد لا ما مع مساء هذا واحد واضاف واضافت فان قبل قال كان دى نحو هذه وان واكد كانت واوضح مايو ب ا أ';
+		$arabic2 = 'عشر عدد عدة عشرة عدم عام عاما عن عند عندما على عليه عليها زيارة سنة سنوات تم ضد بعد بعض اعادة اعلنت بسبب حتى اذا احد اثر برس باسم غدا شخصا صباح اطار اربعة اخرى بان اجل غير بشكل حاليا بن به ثم اف ان او اي بها صفر';
+		
+		$arabic_stopwords = $arabic1.$arabic2;
+		$arabic_stopwords = explode(" ", $arabic_stopwords);
+		$english_stopwords = array("a", "about", "above", "above", "across", "after", "afterwards", "again", "against", "all", "almost", "alone", "along", "already", "also","although","always","am","among", "amongst", "amoungst", "amount", "an", "and", "another", "any","anyhow","anyone","anything","anyway", "anywhere", "are", "around", "as", "at", "back","be","became", "because","become","becomes", "becoming", "been", "before", "beforehand", "behind", "being", "below", "beside", "besides", "between", "beyond", "bill", "both", "bottom","but", "by", "call", "can", "cannot", "cant", "co", "con", "could", "couldnt", "cry", "de", "describe", "detail", "do", "done", "down", "due", "during", "each", "eg", "eight", "either", "eleven","else", "elsewhere", "empty", "enough", "etc", "even", "ever", "every", "everyone", "everything", "everywhere", "except", "few", "fifteen", "fify", "fill", "find", "fire", "first", "five", "for", "former", "formerly", "forty", "found", "four", "from", "front", "full", "further", "get", "give", "go", "had", "has", "hasnt", "have", "he", "hence", "her", "here", "hereafter", "hereby", "herein", "hereupon", "hers", "herself", "him", "himself", "his", "how", "however", "hundred", "ie", "if", "in", "inc", "indeed", "interest", "into", "is", "it", "its", "itself", "keep", "last", "latter", "latterly", "least", "less", "ltd", "made", "many", "may", "me", "meanwhile", "might", "mill", "mine", "more", "moreover", "most", "mostly", "move", "much", "must", "my", "myself", "name", "namely", "neither", "never", "nevertheless", "next", "nine", "no", "nobody", "none", "noone", "nor", "not", "nothing", "now", "nowhere", "of", "off", "often", "on", "once", "one", "only", "onto", "or", "other", "others", "otherwise", "our", "ours", "ourselves", "out", "over", "own","part", "per", "perhaps", "please", "put", "rather", "re", "same", "see", "seem", "seemed", "seeming", "seems", "serious", "several", "she", "should", "show", "side", "since", "sincere", "six", "sixty", "so", "some", "somehow", "someone", "something", "sometime", "sometimes", "somewhere", "still", "such", "system", "take", "ten", "than", "that", "the", "their", "them", "themselves", "then", "thence", "there", "thereafter", "thereby", "therefore", "therein", "thereupon", "these", "they", "thickv", "thin", "third", "this", "those", "though", "three", "through", "throughout", "thru", "thus", "to", "together", "too", "top", "toward", "towards", "twelve", "twenty", "two", "un", "under", "until", "up", "upon", "us", "very", "via", "was", "we", "well", "were", "what", "whatever", "when", "whence", "whenever", "where", "whereafter", "whereas", "whereby", "wherein", "whereupon", "wherever", "whether", "which", "while", "whither", "who", "whoever", "whole", "whom", "whose", "why", "will", "with", "within", "without", "would", "yet", "you", "your", "yours", "yourself", "yourselves", "the");
+		$exploded_key = explode(" ", $key);
+		$final_keywords = array();
+		$final_key1 = '(';
+        $final_key2 = '(';
+		
+		for ($i=0; $i < count($exploded_key); $i++) { 
+			
+			$char = $exploded_key[$i];
+			if(!(in_array($char, $arabic_stopwords) || in_array($char, $english_stopwords)))
+			$final_keywords[] = $exploded_key[$i];
+		}
+		
+		for ($i=0; $i < count($final_keywords); $i++) {
+			
+			$final_key1 = $final_key1.'dtv_listing.title LIKE "%'.$final_keywords[$i].'%"' ;
+			$final_key2 = $final_key2.'dtv_channel.title LIKE "%'.$final_keywords[$i].'%"'.' OR dtv_channel.title_receiver LIKE "%'.$final_keywords[$i].'%"' ;
+			
+			if($i != count($final_keywords)-1)
+			{
+			    $final_key1 = $final_key1.' OR ' ;
+			    $final_key2 = $final_key2.' OR ' ;
+			}
+			
+		}
+		
+		$final_key1 = $final_key1.'AND space = 0'.')';
+		$final_key2 = $final_key2.')';
+		
+		$key_count = 0;
+		foreach ($final_keywords as $row) {
+			$key_count = $key_count + strlen($row);
+		}
+		
+		$data['too_low'] = 0;
+		
+		if($key_count < 3)
+		$data['too_low'] = 1;
+		
+		if((count($final_keywords)) == 0 || ($key_count < 3))
+        {
+            $data['listings'] = NULL;
+            $data['channels'] = NULL;
+        }
+		
+		else
+		{
+		$data['listings']= $this -> listing_model -> search1($final_key1);
+		$data['channels']= $this -> channel_model -> search3($final_key2);
+        
+		foreach ($data['listings'] as $row) {
+				
+			$row -> match_per = 0;
+			$lower = strtolower($row -> title);
+			
+			foreach ($final_keywords as $key) {
+
+				if ((strpos($lower, strtolower($key)) !== false))
+				$row -> match_per = $row -> match_per + 10;
+				
+			}
+		}
+		$sortArray = array(); 
+		foreach($data['listings'] as $person){ 
+		    foreach($person as $key=>$value){ 
+		        if(!isset($sortArray[$key])){ 
+		            $sortArray[$key] = array(); 
+		        } 
+		        $sortArray[$key][] = $value; 
+		    } 
+		} 
+		
+		$orderby = "match_per";
+		if(!empty($data['listings']))
+		array_multisort($sortArray[$orderby],SORT_DESC,$data['listings']);
+		}
+        
+		$userid = $this -> session -> userdata('account_id');
+		
+		$data['s_channels']=sizeof($data['channels']);
+		$data['s_listings']=sizeof($data['listings']);
+		//print_r($data);die;
+		$data['title'] = "البحث";
+        
+        if(!empty($data['channels']))
+			foreach ($data['channels'] as $record) {
+			if (!empty($record->logo) && !file_exists('uploads/channels/115/' . $record -> id . '.jpg')) {
+				list($width, $height, $type, $attr) = getimagesize($record -> logo);
+				$this -> load -> library('image_lib');
+				$config['image_library'] = 'gd2';
+				$config['source_image'] = $record -> logo;
+				$config['maintain_ratio'] = FALSE;
+				
+				$config['new_image'] = 'uploads/channels/115/' . $record -> id . '.jpg';
+				if ($width > $height) {
+					$config['width'] = 115;
+					$config['height'] = round ((115 / $width) * $height);
+				} else {
+					$config['height'] = 115;
+					$config['width'] = round((115 / $height) * $width);
+				}
+
+				$this->image_lib->initialize($config);
+				$this -> image_lib -> resize();
+				$this -> image_lib -> clear();
+			}
+		}
+			
+			if(!empty($data['listings']))
+			foreach ($data['listings'] as $record) {
+			
+			if (!empty($record->poster) && !file_exists('uploads/listings/98/' . $record -> id . '.jpg')) {	
+					list($width, $height, $type, $attr) = getimagesize($record -> poster);
+					$this -> load -> library('image_lib');
+					$config['image_library'] = 'gd2';
+					$config['source_image'] = $record -> poster;
+					$config['maintain_ratio'] = TRUE;
+					$config['new_image'] = 'uploads/listings/98/' . $record -> id . '.jpg';
+					
+					if ($width > $height) {
+						$config['height'] = 82;
+						$config['x_axis'] = '0';
+						$config['y_axis'] = '0';
+						$config['width'] = round ((82 / $height) * $width);
+					} else {
+						$config['width'] = 98;
+						$config['x_axis'] = '0';
+						$config['y_axis'] = '0';
+						$config['height'] = round((98 / $width) * $height);
+					}
+	
+					$this->image_lib->initialize($config);
+					$this -> image_lib -> resize();
+					$config['source_image'] = 'uploads/listings/98/' . $record -> id . '.jpg';
+					$config['new_image'] = 'uploads/listings/98/' . $record -> id . '.jpg';
+					$this -> image_lib -> clear();
+				}
+		}
+		
+		$data['favorites']=array();
+		$query = $this -> favorites_model -> get_user($userid);
+		foreach ($query as $q) {
+			$data['favorites'][] = $q -> listing_id;
+		}
+		$this -> load -> view('search_results', $data);
+	}
+
+}

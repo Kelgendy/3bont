@@ -1,0 +1,61 @@
+<?php
+
+class Rating extends CI_Controller {
+
+	function __construct() {
+		parent::__construct();
+
+		// Load the necessary stuff...
+		$this -> load -> helper(array('language', 'url', 'form', 'account/ssl'));
+		$this -> load -> library(array('account/authentication'));
+		$this -> load -> model(array('account/account_model', 'rating_model'));
+		$this -> lang -> load(array('general'));
+	}
+
+	function index() {
+		redirect();
+	}
+
+	function add() {
+		$user_id = $this -> session -> userdata('account_id');
+
+		if ($this -> rating_model -> get_user_rating($user_id, $_GET['id']) == FALSE) {
+			$this -> rating_model -> insert($_GET['id'], $user_id, $_GET['val']);
+			echo 1;
+			return;
+		} else {
+			$this -> rating_model -> update2($_GET['id'], $user_id, $_GET['val']);
+			echo 1;
+			return;
+		}
+
+		echo 0;
+	}
+	
+	function session() {
+			
+		if(isset($_SERVER['HTTP_REFERER']))	
+		{
+			$url = $_SERVER['HTTP_REFERER'];
+			$x = preg_split('/listings/', $url);
+			$x = substr($x[1], 1);
+			
+			$rating = array('value'=>$_GET['value'],'listing_slug'=>$x,'listing_id'=>$_GET['listing']);
+			$this->session->set_userdata('rate', $rating);
+			echo 1;
+		}
+		else
+			echo 0;	
+		
+		
+	}
+	
+	function session2() {
+			
+		$rating = array('value'=>$_GET['value'],'listing_id'=>$_GET['listing']);
+		$this->session->set_userdata('rate', $rating);
+		
+		echo 1;
+	}
+
+}

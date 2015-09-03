@@ -1,0 +1,333 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Quant Robots</title>
+<link href="css/reset.css" type="text/css" rel="stylesheet" />
+<link href="css/style.css" type="text/css" rel="stylesheet" />
+<link href="css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
+<script src="js/jquery.js"></script>
+<script src="js/jquery-migrate-1.2.1.min.js"></script>
+<script src="js/jquery-ui-1.10.4.custom.min.js"></script>
+<script type="text/javascript" src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<script type="text/javascript" src="js/jquery.scrollTo-1.4.2-min.js"></script>
+<script type="text/javascript" src="js/jquery.localscroll-1.2.7-min.js"></script>
+<script type="text/javascript" src="js/scrollingpara.js"></script>
+<script type="text/javascript" src="js/jquery.easing.1.3.js"></script>
+<script type="text/javascript" src="js/jquery.parallax.min.js"></script>
+</head>
+<script>
+	
+$(document).ready(function(){
+$('a.link').click(function () {  
+			
+		
+			$('a.link').removeClass('selected');  
+			$(this).addClass('selected');
+			 
+		});  
+	
+$('.nav').localScroll({
+           target:'body'
+        });
+ $('.brand').localScroll({
+           target:'body'
+        });
+ 
+	
+	
+	
+	$("#tabs").tabs();
+	$("#pillars").tabs();
+	});
+	
+	
+	
+	
+	
+
+</script>
+<body>
+<header class="menu">
+  <div class="wrapper">
+    <div class="brand"><a href="#top"><img src="img/logo_03.png"/></a></div>
+    <nav>
+      <ul class="nav">
+        <li><a href="#top" class="link selected">HOME</a></li>
+        <li><a href="#about" class="link">ABOUT</a></li>
+        <li><a href="#services" class="link">SERVICES</a></li>
+        <li><a href="#jobs" class="link">JOBS</a></li>
+        <li><a href="#contact" class="link">CONTACT</a></li>
+      </ul>
+    </nav>
+    <div class="clearfix"></div>
+  </div>
+</header>
+<div id="top"></div>
+<div id="home">
+  <div class="wrapper"> </div>
+  <!--wrapper-->
+  
+  <div class="content">
+    <div class="wrapper">
+      <div class="home-cont">
+        <div class="port-cont">
+          <div id="port"> 
+          <img class="parallax-layer" src="img/layer4.png" alt="" style="width:961px; height:511px;"/> 
+          <img class="parallax-layer" src="img/layer3.png" alt="" style="width:965px; height:511px;"/>
+           <img class="parallax-layer" src="img/layer2.png" alt="" style="width:965px; height:511px;"/> 
+           <img class="parallax-layer" src="img/layer1.png" alt="" style="width:931px; height:511px;"/> 
+           </div>
+        </div>
+        <!---port-cont-->
+        
+        <div class="data nav">
+          <div class="title">Trading the financial markets? Stocks? Forex? Futures? or Options?</div>
+          <h1>GO AUTOMATED & <span>BEAT THE MARKET</span></h1>
+          <p>We are a young venture with focus on Algorithmic/Automated trading. We are passionate about developing creative trading solutions that are fast, flexible & reliable. Coding strategies using fundamental, technical and mathematical analysis going through backtesting using huge database of historical data to  running verified strategies on live servers and monitoring live performance</p>
+          <div class="d-1">
+            <h3>WHO WE ARE</h3>
+            <p><a href="#about">It's all about experience & expertise, click here to know more about us.</a></p>
+            <a href="#about" class="arrow"><img src="img/arrow.png"></a>
+          </div>
+          <div class="d-1">
+            <h3>WHAT WE DO</h3>
+            <p><a href="#services">Find out about our line of business & the difference services we can provide 
+              you.</a> </p>
+              <a href="#services" class="arrow"><img src="img/arrow.png"></a>
+          </div>
+          <div class="d-1 last">
+            <h3>JOIN US</h3>
+            <p><a href="#jobs">Do you have talent? Are you a hard worker? Click here to join our elite
+              team. </a></p>
+              <a href="#jobs" class="arrow"><img src="img/arrow.png"></a>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        <!--data--> 
+        
+      </div>
+      <!--home-cont--> 
+    </div>
+  </div>
+</div>
+<!--home-->
+
+<div id="about">
+  <div class="circle-cont">
+    <div class="about-content">
+      <div class="circle"></div>
+    </div>
+    <div class="wrapper">
+      <div class="img-cont"> <img src="img/screen.png" />
+        <div class="left-cont">
+          <h1>ABOUT US</h1>
+          <P>Quant Robots LLC is a young venture focused on development of automatic / robot trading systems in capital markets. We are into development and design of
+            quantitative models, high frequency trading systems, and backtesting applications and implement these models in live markets. </P>
+        </div>
+        <div class="lower-cont">
+          <h3>We develop customized strategies</h3>
+          <p>based on technical indicators & mathematical
+            statistical models</p>
+        </div>
+      </div>
+    </div>
+    <!--wrapper--> 
+    
+  </div>
+  <!--about-content--> 
+</div>
+<!--aboutus-->
+<div id="services">
+  <div class="wrapper">
+    <div class="header">
+      <h1>SERVICES</h1>
+      <p>We are a young venture with focus on Algorithmic/Automated trading. We are passionate about creating trading solutions that are fast, flexible and reliable. We provide services in the following areas:</p>
+    </div>
+    <div id="tabs">
+      <ul>
+        <li><a href="#tabs-1">Algorithmic / Automated
+          Trading</a></li>
+        <li><a href="#tabs-2">High Frequency 
+          Trading</a></li>
+        <li><a href="#tabs-3">Backtesting and 
+          Optimization</a></li>
+        <li><a href="#tabs-4">Quantitative & Strategy 
+          Development</a></li>
+      </ul>
+      <div id="tabs-1">
+        <p>Set of rules, instructions, coded into a computer to predict movement in financial market. Also referred as systematic trading, robotic trading. An automated / algorithmic trading systems monitor trends based on technical indicators, fundamental information, statistics based on live streaming of market data feed. 
+          Algorithmic trading systems are used by hedge funds, prop trading firms, retail and institutional traders and funds.</p>
+        <p>Key behind algorithmic trading is elimination of human errors and emotions as these systems run using computers without any human emotions. Design of algorithmic trading systems is very robust and can make decisions at Nano-seconds level. Algorithmic systems are capable to incorporate any custom complex rules. </p>
+        <p>At Quant Robots, we offer cost effective quantitative development services in algorithmic trading domain. Our team is highly proficient in developing and designing of advanced trading systems. We work hard to develop systems according to our client’s custom requirements.</p>
+      </div>
+      <!--tab1-->
+      
+      <div id="tabs-2">
+        <p>Phasellus mattis tincidunt nibh. Cras orci urna, blandit id, pretium vel, aliquet ornare, felis. Maecenas scelerisque sem non nisl. Fusce sed lorem in enim dictum bibendum.</p>
+      </div>
+      <div id="tabs-3">
+        <p>Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque nisi urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.</p>
+      </div>
+      <div id="tabs-4">
+        <p>Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque nisi urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.</p>
+      </div>
+    </div>
+  </div>
+  <!--wrapper--> 
+</div>
+<!--services-->
+<div id="jobs">
+  <div class="circle-cont">
+    <div class="circle"></div>
+  </div>
+  <div class="wrapper">
+    <div class="team-cont">
+      <h1>Job opportunities</h1>
+      <div class="cont-wrapper">
+        <p>At Quant Robots, potential candidates will find a group of people committed to intellectual rigor, strong teamwork, and the pursuit of great discoveries. We recognize that to remain successful it is imperative that we continue to hire and retain exceptional talent </p>
+        <p> Quant Robots recruits new mathematicians and developers from some of the top universities in the country. We are looking for candidates who are eager to deploy their exceptional technical skills in an entrepreneurial environment that provides some of the most exciting and rewarding challenges a career can offer.</p>
+        <p>At Quant Robots, we enjoy a casual atmosphere. Our management team is passionate about supporting the exploration of new strategies and concepts throughout the company. They not only encourage new ideas, they expect them. </p>
+        <p>Quant Robots recognizes and rewards stellar performance. Our company thrives on empowering individuals to make their career at Quant Robots whatever they want it to be.</p>
+      </div>
+      <!--content-wrapper-->
+      <div class="img-wrapper"><img src="img/lamp.png"/></div>
+      <div class="clearfix"></div>
+      <div id="pillars">
+      
+        <ul>
+          <li><a href="#job-1">Software Development Manager </a></li>
+          <li><a href="#job-2">Quantitative Analyst </a></li>
+          <li><a href="#job-3">Senior Java Developer </a></li>
+          <li><a href="#job-4">Executive Secretary </a></li>
+        </ul>
+        <div class="tab-content">
+          <div id="job-1">
+            <p>Overview
+              You will join a rapidly expanding firm, in a team that is placing a significant focus on bringing on board top Ivy League quant analysts and developers
+              Working alongside other quants and developers you will work on the full-lifecycle of developing and trading statistical systematic strategies across various trading horizons and financial markets
+              The position assumes conducting research, development and the maintenance of mathematical/statistical models that can be used in the trading process and for post-trade analysis
+              Only those with solid technical and modeling skills are encouraged to apply </p>
+            <h1>Main Job Tasks & Responsibilities</h1>
+            <ul>
+              <li><span class="arrow-right"></span>Help develop a wide suite of models, structure and execution methodology to maintain a winning edge in the financial market</li>
+              <li><span class="arrow-right"></span>Statistical analysis of portfolios and risk parameters</li>
+              <li><span class="arrow-right"></span>Maintain, on an on-going basis, a proper documentation of the implemented financial models</li>
+              <li><span class="arrow-right"></span>Monitoring and analyzing huge number of daily transactions</li>
+              <li><span class="arrow-right"></span>Looking at huge datasets and devising methods to detect patterns</li>
+              <li><span class="arrow-right"></span>Develop algorithmic strategies</li>
+              <li><span class="arrow-right"></span>Modeling different asset classes for high frequency trading in the financial market</li>
+            </ul>
+            
+            <h1>Qualifications</h1>
+            <ul>
+<li><span class="arrow-right"></span>Only candidates with a Master or PhD in a quantitative subject such as Mathematics, Computer Science, Theoretical Physics, Statistics, or Engineering will be considered.</li>
+<li><span class="arrow-right"></span>You are NOT required to leave your university profession</li>
+<li><span class="arrow-right"></span>Ability to translate research into usable, value-added tools and information</li>
+<li><span class="arrow-right"></span>Good command of MATLAB or R is a must </li>
+<li><span class="arrow-right"></span>Excellent analytical and problem solving skills</li>
+<li><span class="arrow-right"></span>Knowledge of C++ or JAVA is a plus</li>
+<li><span class="arrow-right"></span>Knowledge of statistics and signal processing</li>
+<li><span class="arrow-right"></span>Knowledge of pattern recognition and artificial intelligence is a plus</li>
+<li><span class="arrow-right"></span>Knowledge of statistical arbitrage is a plus</li>
+<li><span class="arrow-right"></span>Sense of responsibility, initiative and ability to organize and prioritize</li>
+<li><span class="arrow-right"></span>Strong communication skills (with ability to convey complex/technical information to both technical and non-technical audiences)</li>
+<li><span class="arrow-right"></span>Ability to draft clear and concise documents in English</li>
+<li><span class="arrow-right"></span>Ability to work under pressure and meet deadlines</li>
+</ul>
+            
+            
+          </div>
+          <div id="job-2">
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. </p>
+          </div>
+          <div id="job-3">
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. </p>
+          </div>
+          
+          
+          
+                <div id="job-4">
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. </p>
+          </div>
+          
+          
+          
+          
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <!--pillars--> 
+    </div>
+  </div>
+</div>
+<!--team-->
+
+<div id="contact">
+  <div class="circle-cont">
+    <div class="circle"></div>
+  </div>
+  <div class="wrapper">
+    <div class="contact-cont">
+      <div class="info-cont">
+        <h1>CONTACT US</h1>
+        <p class="big">Address:</p>
+        <p>Nullam dictum felis eu pede mollis pretium. Cras dapibus. Vivamus elementum se semper nisi. Aenean vulputate </p>
+        <p class="big">Email:</p>
+        <a href="mailto:info@quantrobots.com">info@quantrobots.com</a> </div>
+      <div class="mail-pic"><img src="img/mail.png"/></div>
+      <div class="clearfix"></div>
+      <div class="form-cont">
+        <form>
+          <div class="inputs">
+            <div class="form-element">
+              <input placeholder="*Name">
+            </div>
+            <div class="form-element">
+              <input placeholder="*Email">
+            </div>
+            <div class="form-element">
+              <input placeholder="*Phone">
+            </div>
+            <div class="form-tag"> <a href="#">Send</a> </div>
+          </div>
+          <div class="areatext">
+            <textarea placeholder="*Message"></textarea>
+          </div>
+          <div class="clearfix"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!--contactus-->
+<footer>
+  <div class="wrapper">
+    <p>© 2014 Quant Robots, LLC. All rights reserved. Quant Robots and the Quant Robots logo are registered trademarks</p>
+  </div>
+</footer>
+<script type="text/javascript">
+
+jQuery(document).ready(function(){
+    
+    // Declare parallax on layers
+    jQuery('.parallax-layer').parallax({
+        mouseport: jQuery("#port")
+    });
+
+});
+
+</script> 
+<script type="text/javascript"> 
+$(function() {
+    
+    $.scrollingParallax('img/para-bg.png', {
+        bgHeight : '5222px',
+		bgWidth : '1350px',
+        staticSpeed : .3,
+        staticScrollLimit : false
+    });
+}); 
+</script>
+</body>
+</html>

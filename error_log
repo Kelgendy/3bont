@@ -1,0 +1,7 @@
+[08-Jun-2014 15:14:29 UTC] PHP Fatal error:  Call to a member function attr() on a non-object in /home/threepont/public_html/application/controllers/news.php on line 39
+[08-Jun-2014 15:15:24 UTC] PHP Fatal error:  Call to undefined method simple_html_dom_node::attr() in /home/threepont/public_html/application/controllers/news.php on line 41
+[08-Jun-2014 15:16:11 UTC] PHP Fatal error:  Call to undefined method simple_html_dom_node::attr() in /home/threepont/public_html/application/controllers/news.php on line 41
+[08-Jun-2014 15:21:53 UTC] PHP Parse error:  syntax error, unexpected end of file in /home/threepont/public_html/application/controllers/news.php on line 897
+[08-Jun-2014 15:22:24 UTC] PHP Parse error:  syntax error, unexpected end of file, expecting ']' in /home/threepont/public_html/application/controllers/news.php on line 724
+[08-Jun-2014 17:21:57 UTC] PHP Parse error:  syntax error, unexpected end of file in /home/threepont/public_html/application/controllers/news.php on line 882
+[08-Jun-2014 19:32:07 UTC] PHP Parse error:  syntax error, unexpected end of file in /home/threepont/public_html/application/controllers/news.php on line 794

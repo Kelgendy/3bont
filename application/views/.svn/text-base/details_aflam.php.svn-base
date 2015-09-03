@@ -1,0 +1,177 @@
+<? include('header_details.php'); ?>
+
+<div class="size9 grid_8">
+  		<div class="details_show_img"><div style="width: 310px; height: 255px; background-image:url(<?= (file_exists('uploads/listings/310/'.$listing[0] -> id.'.jpg') ? 'uploads/listings/310/'.$listing[0] -> id.'.jpg' : 'resource/img/nologo_310.png')?>); background-position: top center; background-size: cover; background-color: #000"></div></div>
+		<div class="details_bullet_square"></div>
+    	<h1 class="details_show_name"><?= $cat_title.": ".$listing[0] -> title ?></h1>
+        <div class="clear"></div>
+		<div class="rating_bar_row">
+            <div class="rating_bar" id="listing<?=$listing[0]->id?>">
+        	<span><?=!empty($user_review) ? $user_review->value : ""?></span>
+				<div class="rating1"></div>
+				<div class="rating2"></div>
+				<div class="rating3"></div>
+				<div class="rating4"></div>
+				<div class="rating5"></div>
+				<div class="rating6"></div>
+				<div class="rating7"></div>
+				<div class="rating8"></div>
+				<div class="rating9"></div>
+				<div class="rating10"></div>
+		<a href="#" class="<?=(!empty($user_review))?'rate'.$user_review->value : ''?>" title="أضف تقييمك"></a>
+        </div>
+		<div class="rating_star"><?= round($rating, 0) ?></div>
+        </div>
+        <br class="clear"/>
+        <p class="details_show_description"><?=$listing[0] -> l_description ?> </p>
+  		<div class="details_show_cast text_color">
+  			<?php
+			for ($i = 0; $i < sizeof($cast); $i++) {
+				if ($i == sizeof($cast) - 1)
+					echo $cast[$i] -> name;
+				else
+					echo  $cast[$i] -> name.'، ';
+			}
+  			?></div>
+  </div>
+  
+  	<input type='hidden' id='current_page' />  
+	<input type='hidden' id='limit' />  
+ 
+	
+
+  <div class="size8 grid_8 details_grid" >
+  		<div class="details_grid_header">
+        	<span class="details_grid_name_title">القناة</span>
+            <span class="details_grid_date_title">التاريخ</span>
+            <span class="details_grid_time_title">الميعاد</span>
+        </div>
+        <?php if(!empty($dates)){?>
+        	<div id="details_grid">
+			<?php
+           for($i=0;$i<sizeof($dates);$i++)
+			{  		
+			?>
+			<div class="details_grid_row">
+			<span class="details_grid_logo" style="width:47px"><a title="<?=$title[$i]?>" href="<?=site_url("channels/".$slug[$i])?>"><img <?=$fix[$i]?> alt="<?=$title[$i]?>" src="<?=!empty($logo[$i]) ? $logo[$i] : "resource/img/nologo_47.png" ?>"></a><? if($repeat[$i] == 1) { ?><img src="resource/img/repeat.png" class="repeat_icon" alt="إعادة" title="إعادة"/><? } ?></span>
+             <span class="details_grid_date">
+             	<?=$dates[$i];?> 
+            </span>
+            <span class="details_grid_time"><?=$times[$i] ?></span>
+            <div class="clear"></div>
+             </div>
+         
+            <?php } ?>
+       </div>
+   
+   <div class="clear"></div>
+        <div class="arrows_contanier" id='page_navigation'>
+            <a href="#" class="arrow_right arrow_disabled"></a>
+            <a href="#" class="arrow_left"></a>
+        </div>
+		<?php }else{?>
+			<div> <p class="noshows">لايوجد اي أوقات عرض قريبا</p></div>
+		<?php }?>
+		
+        <div class="details_grid_panel">
+        	<p class="details_grid_panel_description">تم إضافة الميعاد الى جدولك الخاص. لضبط توقيت التذكير الرجاء أختيار الميعاد المفضل أسفل :</p>
+            <div class="details_grid_panel_reminder ">
+            	<a href="#">اليوم</a>
+                	<ul>
+                         <li><a href="#">24 ساعة</a></li>
+                         <li><a href="#">30 دقيقة</a></li>
+                         <li><a href="#">15 دقيقة</a></li>
+               		</ul>
+            </div>
+            <div class="details_grid_panel_repeat">
+              <label>التكرار</label>
+              <input type="checkbox" name="checkbox" id="checkbox">
+            </div>
+            <a href="#" class="details_grid_panel_save"></a>
+            <a href="#" class="details_grid_panel_close"></a>
+        </div>
+                          
+  </div><!-- end size9 grid8 -->
+ 
+  <div class="size8 grid_8">
+  	 <?php if(!empty($reviews)){?>
+	<div id="reviews">
+		<?php $i=1;?>
+		<?php foreach ($reviews as $review) {?>
+			<div class="review_row">
+			<div id="row<?=$i++?>">
+        <a class="rating_star"><?= $review->rating?></a>
+        <p class="review_title"><?= $review->review_title?></p> 
+        <div class="clear"></div>
+        <div class="review_post"><?=substr($review->review,0,100)?><?=(strlen($review->review)>=100)?'...<a href="'.site_url("review/listing/".$listing[0]->slug."/").'" class="review_more text_color">المزيد</a>':''?></div>  
+        <div class="clear"></div>
+        <span class="review_post_name text_color"><?=$review->username?></span>
+        <span class="review_post_date"><?=date('d-m-Y',strtotime($review->date_time))?></span>
+        <div class="clear"></div>
+       
+        </div>
+        </div>
+
+<?php }?>
+      </div>
+      <div class="review_actions">
+ <?=anchor("review/listing/".$listing[0]->slug."/","التقييمات", array('class'=>'update'))?> </div>
+ <span class="sep">|</span>
+  <?php }else{?>
+  	<div> <p class="noshows">لا يوجد تقييمات متاحة الآن</p></div>
+ <?php }?>
+	 <div class="review_actions"><a  href="#<?=$this -> session -> userdata('account_id') == FALSE ? "modal" : (empty($review_added)?"modal1":"modal2") ?>" id="add_review" class="add_review update text_color">أضف تقييمك ألان</a></div>
+
+ </div><!-- end size9 grid8 -->
+
+<script type="text/javascript">
+var src= "<?= $listing[0]->video ?>";
+var type= "<?= $listing[0]->video_type ?>";
+var id= "<?= $listing[0]->video_id ?>";
+if(src!="")
+{
+	if(type == "youtube")
+	{
+		id= youtube_parser(src);
+		document.write(' <div class="size8 grid_8" ><iframe width="295" height="240" src="http://www.youtube.com/embed/'+id+'" frameborder="0" allowfullscreen style="margin-top: 8px;margin-right: 8px;"></iframe>  </div>');	
+	}
+	
+ 	if(type == "vimeo")
+	{
+	  document.write(' <div class="size8 grid_8" ><iframe width="295" height="240" src="http://player.vimeo.com/video/'+id+'" frameborder="0" allowfullscreen style="margin-top: 8px;margin-right: 8px;"></iframe>  </div>');
+	}
+}
+</script>
+
+<!-- end size9 grid8 -->
+  <?php if(!empty($photos)){?>
+  <div class="size8 grid_8">
+          <div id="galleria">
+          	<?php foreach ($photos as $photo) {?>
+                <img style="width:290px; height:180px;" src="<?=$photo->url?>">
+           <?php }?>
+        </div>
+  </div><!-- end size9 grid8 -->
+<?php }?>
+<? if(!empty($related)){ ?>
+  <div class="grid_24">
+  <div class="sections_title">عروض مشابهة</div>
+  <? foreach($related as $item) { ?>
+  	<div class="related_show_item">
+    	<div class="related_show_img"><a href="<?=site_url('listings/'.$item->slug)?>"><div class="<?= $item->category == 1 ? "red": ($item->category == 2 ? "blue": ($item->category == 3 ? "orange": ($item->category == 4 ? "terquaz": ($item->category == 5 ? "green": ""))))?> related_img" style="width:110px; height:108px; background-size: cover; background-image:url(<?= (file_exists('uploads/listings/110/'.$item -> id.'.jpg') ? 'uploads/listings/110/'.$item -> id.'.jpg' : 'resource/img/nologo_110.png')?>); background-position: center; background-color: #000"></div></a></div>
+        <div class="related_show_name"><?=$item->title?></div>
+    </div>
+  <? }?>
+  </div><!-- end grid24 -->
+  <? } ?>
+</div>
+<!-- end .container_24 -->
+<!-- photo gallery -->
+<?php if(!empty($photos)){?>
+<script>
+	Galleria.loadTheme('resource/js/galleria.classic.min.js');
+	Galleria.run('#galleria'); 
+</script>
+<?php }?>
+<? include("fancybox.php"); ?>
+<? include('footer.php'); ?>

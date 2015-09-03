@@ -1,0 +1,527 @@
+<script language="javascript" type="text/javascript">
+	var numCols = 8;
+	var numRows = 100;
+	var gridBlocks = 0;
+	//Shows sorting function - sorts them by popularity, putting the promoted show first
+	function sortByRanking(a, b){
+	  var aRanking = a[1];
+	  var bRanking = b[1];
+	 
+	  if(a[3] == 1){
+	  	return -1;
+	  }else if(b[3] == 1){
+	  	return 1;
+	  }
+	  return ((aRanking < bRanking) ? -1 : ((aRanking > bRanking) ? 1 : 0));
+	}
+	
+	//Sort blocks by row
+	function sortByRow(a, b){
+	
+	  var aRow = a[1];
+	  var bRow = b[1];
+	  
+	  var aCol = a[2];
+	  var bCol = b[2]
+	  
+	  return ((aRow < bRow) ? -1 : ((aRow > bRow) ? 1 : ((aCol < bCol) ? -1 : (aCol > bCol) ? 1 : 0)));
+	}
+	
+	//check if grid is full
+	function gridFull(grid){
+		for (var m = 0; m < numCols; m++) {
+			for (var n = 0; n < numRows; n++) {
+					if(grid[m][n] == 0){
+						return false;
+					}
+			}
+		}
+		return true;
+	}
+	
+	//Get coordinates of first zero 
+	function getZero(row){
+		var xy = new Array(2);
+		for (var m = row; m < numRows; m++) {
+			for (var n = 0; n < numCols; n++) {
+					if(grid[n][m] == 0){
+						xy[0] = n;
+						xy[1] = m;
+						break;
+					}
+			}
+			
+			if(n == numCols)
+				n = n-1;
+				
+			if(grid[n][m] == 0){
+				break;
+			}
+		}
+		
+		return xy;
+	}
+	
+	//Get vertical space left
+	function vSpace(zeroXY){
+		var vSpaceLeft = 0;
+		for(var j = zeroXY[1]; j < numRows; j++){
+			if(grid[zeroXY[0]][j]== 0){
+				vSpaceLeft++;
+			}else{
+				break;
+			}
+		}
+		
+		return vSpaceLeft;
+	}
+	
+	//Get horizontal space left
+	function hSpace(zeroXY){
+		var hSpaceLeft = 0;
+		for(var j = zeroXY[0]; j < numCols; j++){
+			if(grid[j][zeroXY[1]]== 0){
+				hSpaceLeft++;
+			}else{
+				break;
+			}
+		}
+		
+		return hSpaceLeft;
+	}
+	
+	//Array representation of grid
+	var grid = new Array(numCols);
+	for (var i = 0; i < numCols; i++) {
+		grid[i] = new Array(numRows);
+		for (var j = 0; j < numRows; j++) {
+			grid[i][j] = 0;
+		}
+	}
+	
+	//Sizes array (cols, rows)
+	var sizes = new Array();
+	sizes[0] = [4,3]; //4x3 - promoted
+	sizes[1] = [3,2]; //3x2 - rating 4-5
+	sizes[2] = [2,2]; //2x2 - rating 3-4
+	sizes[3] = [4,1]; //4x1 - rating 2-3
+	sizes[4] = [2,1]; //2x1 - rating 1-2
+	sizes[5] = [1,2]; //1x2 - rating 0-1
+	sizes[6] = [1,1]; //1x2 - rating 0
+
+	var blocks = new Array();
+
+	//loop through shows, calculate needed number of rows
+	for(var i = 0; i < shows.length; i++){
+	 	if(shows[i]['promoted'] == 1){ //If promoted spot
+				shows[i]['class'] = "size1";
+				shows[i]['sizex'] = sizes[0][0];
+				shows[i]['sizey'] = sizes[0][1];
+		}else{
+			var size = "";
+			var sizeX = 0;
+			var sizeY = 0;
+			
+			if(shows[i]['avg_rating'] > 8){
+				size = "size2";
+				sizeX = sizes[1][0];
+				sizeY = sizes[1][1];
+			}else if(shows[i]['avg_rating'] > 6 && shows[i]['avg_rating'] <= 8){
+				size = "size3";
+				sizeX = sizes[2][0];
+				sizeY = sizes[2][1];
+			}else if(shows[i]['avg_rating'] > 3 && shows[i]['avg_rating'] <= 6){
+				size = "size5";
+				sizeX = sizes[4][0];
+				sizeY = sizes[4][1];
+			}else {
+				size = "size7";
+				sizeX = sizes[6][0];
+				sizeY = sizes[6][1];
+			}
+			
+			shows[i]['class'] = size;
+			shows[i]['sizex'] = sizeX;
+			shows[i]['sizey'] = sizeY;
+			
+			switch(shows[i]['category']){
+				case '1':
+				shows[i]['category_class'] = "red";
+				break;
+				case '2':
+				shows[i]['category_class'] = "blue";
+				break;
+				case '3':
+				shows[i]['category_class'] = "orange";
+				break;
+				case '4':
+				shows[i]['category_class'] = "terquaz";
+				break;
+				case '5':
+				shows[i]['category_class'] = "green";
+				break;
+			}
+		}
+		
+		gridBlocks += shows[i]['sizex'] * shows[i]['sizey'];
+	}
+	
+	numRows = Math.ceil(gridBlocks/numCols);
+	
+	//Loop through shows one by one
+	for(var i = 0; i < shows.length; i++){
+		vSpaceLeft = 0;
+		hSpaceLeft = 0;
+		var row = -1;
+		
+		
+		//find first zero block in row, big enough for the current. If not, find another size.
+		while((shows[i]['sizex'] > hSpaceLeft || shows[i]['sizey'] > vSpaceLeft) && row != numRows-1){
+			row++;
+			
+			var zeroXY = getZero(row);
+			
+			//measure how much space left in grid
+			vSpaceLeft = vSpace(zeroXY);
+			hSpaceLeft = hSpace(zeroXY);
+			
+		}
+		
+		if(vSpaceLeft < shows[i]['sizey'] || hSpaceLeft < shows[i]['sizex']){
+			
+			if(hSpaceLeft < shows[i]['sizex']){
+				numRows = numRows + 1;
+			}else{
+				numRows = numRows + 1;
+			}
+		
+			
+			var grid2 = new Array(numCols);
+			for (var j = 0; j < numCols; j++) {
+				grid2[j] = new Array(numRows);
+				for (var k = 0; k < numRows; k++) {
+					grid2[j][k] = 0;
+				}
+			}	
+			
+			for (var j = 0; j < grid.length; j++) {
+				for (var k = 0; k < grid[j].length; k++) {
+					grid2[j][k] = grid[j][k];
+				}
+			}	
+			
+			grid = grid2;
+			
+			if(hSpaceLeft < shows[i]['sizex']){
+				zeroXY[0] = 0;
+				zeroXY[1] = numRows-1;
+			}
+			
+			//alert(grid[0].length+" "+numRows);
+		}
+		
+		var temp='';
+		if(shows[i]['real_id']!=undefined)
+		temp='/'+shows[i]['real_id'];
+		
+		blocks[i] = new Array("<div class='"+shows[i]['class']+" "+ shows[i]['category_class'] +" item'><div class='strip_top'></div><div><a title=\""+ shows[i]['title'] +"\" class=\"popup_link\" href=\"#"+shows[i]['id']+"/"+shows[i]['type']+"/"+ shows[i]['category_class']+temp+"\"><div class='grid_overlay'><p>"+ shows[i]['title'] +"</p></div><div class=\"gridListing\" data-style=\""+shows[i]['poster_img']+"\"></div></a></div><div class=\"strip_loader\"><div class=\"loader_bar\"  style=\"width:"+shows[i]['percentage']+"%\"></div></div><div class=\"strip_bottom\"><span class=\"time\">"+shows[i]['start_time']+" - "+shows[i]['end_time']+"</span></div><div class=\"item2 size1\"></div>"
+    	+ "</div></div>", zeroXY[1], zeroXY[0]);
+		
+		for(var j = zeroXY[0]; j < zeroXY[0]+shows[i]['sizex']; j++){
+			for(var k = zeroXY[1]; k < zeroXY[1]+shows[i]['sizey']; k++){
+				grid[j][k] = shows[i]['listing_id'];
+			}
+		}
+	}
+	
+	
+	
+	//fill zeros with gray blocks
+	while(!gridFull(grid)){
+		var vSpaceLeft = 0;
+		var hSpaceLeft = 0;
+		var size = "";
+		var sizeX = 0;
+		var sizeY = 0;
+		
+		var zeroXY = getZero(0);
+		
+		//measure how much space left in grid
+		vSpaceLeft = vSpace(zeroXY);
+		hSpaceLeft = hSpace(zeroXY);
+		
+		if(hSpaceLeft >= 4 && size == ""){
+			if(vSpaceLeft >= 1){
+				size = "size4";
+				sizeX = 4;
+				sizeY = 1;
+			}
+		}
+		
+		if(hSpaceLeft >= 3 && size == ""){
+			if(vSpaceLeft >= 2){
+				size = "size2";
+				sizeX = 3;
+				sizeY = 2;
+			}
+		}
+		
+		if(hSpaceLeft >= 2 && size == ""){
+			if(vSpaceLeft >= 2){
+				size = "size3";
+				sizeX = 2;
+				sizeY = 2;
+			}else if(vSpaceLeft == 1){
+				size = "size5";
+				sizeX = 2;
+				sizeY = 1;
+			}
+		}
+		
+		if(hSpaceLeft >= 1 && size == ""){
+			if(vSpaceLeft >= 2){
+				size = "size6";
+				sizeX = 1;
+				sizeY = 2;
+			}else if(vSpaceLeft == 1){
+				size = "size7";
+				sizeX = 1;
+				sizeY = 1;
+			}
+		}
+		
+		blocks[blocks.length] = new Array("<div class='"+size+" filler item'></div>", zeroXY[1], zeroXY[0]);
+		for(var j = zeroXY[0]; j < zeroXY[0]+sizeX; j++){
+			for(var k = zeroXY[1]; k < zeroXY[1]+sizeY; k++){
+				grid[j][k] = "x";
+			}
+		}
+		
+		
+	}
+	
+	//alert(gridFull(grid));
+	
+	var string = "";
+		for (var i = 0; i < numRows; i++) {
+	
+			for (var j = 0; j < numCols; j++) {
+				string += '[' + grid[j][i] +  ']';
+			}
+			
+			string += '\n';
+		}
+	//alert(string);
+	
+	blocks.sort(sortByRow);
+	
+	
+$(document).ready(function(){
+	$('.container_24').width(numCols*110 + 10*numCols);
+		var string = "";
+		for(var i = 0; i<blocks.length; i++){
+			string += blocks[i][0];
+		}
+
+		$('#container').html(string);
+		
+		  $('#container').masonry({
+		    // options
+		    itemSelector : '.item',
+		    columnWidth : 30
+		  });
+	$('.popup_link').mouseover(function(){
+		$(this).children('.grid_overlay').show();
+	});
+	
+	$('.popup_link').mouseleave(function(){
+		$(this).children('.grid_overlay').fadeOut(250);
+	});
+	
+	$('.popup_link').click(function(){
+		var link = $(this).attr('href');
+		link = link.replace('#','');
+		var exploded = link.split('/');
+		
+		var final_id = exploded[3];
+		if(final_id == undefined)
+		final_id = -1;
+		
+		$( this ).parent().siblings(".item2").addClass(exploded[2]);
+		$( this ).parent().siblings(".item2").html("<div class=\"pop_up_loading\"><img src='resource/img/ajax-loader.gif'/></div>");
+		var data = {id:exploded[0], type: exploded[1],real_id: final_id}
+		$( this ).parent().siblings(".item2").load('index.php/home/popup', data, function(msg) {
+		  //alert(msg);
+		});
+		$('.black_overlay').fadeIn(200);
+		$('.item2').hide(250);
+		var thisHeight = $( this ).parent().parent().outerHeight();
+		var top = $( this ).parent().parent().position().top;
+		var left = $( this ).parent().parent().position().left;
+		var maxHeight = $('#container').outerHeight();
+		if(left <= 490){
+			$( this ).parent().siblings(".item2").css('left', '0px');
+		}
+		
+		if(maxHeight - top < 402 && thisHeight + top >=402){
+			$( this ).parent().siblings(".item2").css('bottom', '0px');
+		}else{
+			$( this ).parent().siblings(".item2").css('top', '0px');
+		}
+		$( this ).parent().siblings(".item2").show(250);
+		return false;
+	});
+	
+	lazyload();
+	
+	$(window).scroll(lazyload);
+	 
+	$('body').click(function(){
+		$('.item2').hide(250);
+		$('.black_overlay').fadeOut(200);
+	});
+	
+	$('.item2').mouseleave(function(event){
+		$(this).hide(250);	
+		$('.black_overlay').fadeOut(200);
+	});
+	
+	$('.item2').click(function(event){	
+		event.stopPropagation();
+	});
+
+});	
+
+function UrlExists(url)
+{
+    var http = new XMLHttpRequest();
+    http.open('HEAD', url, false);
+    http.send();
+    return http.status!=404;
+}
+
+function lazyload(){
+   var wt = $(window).scrollTop();    //* top of the window
+   var wb = wt + $(window).height();  //* bottom of the window
+
+   $(".gridListing").each(function(){
+      var ot = $(this).offset().top;  //* top of object (i.e. advertising div)
+      var ob = ot + $(this).height(); //* bottom of object
+
+      if(!$(this).attr("loaded") && wt<=ob && wb >= ot){
+      	 $(this).hide();
+      	 var imageUrl = $(this).attr('data-style');
+         $(this).css('background-image', 'url(' + imageUrl + ')').fadeIn(350);
+         $(this).attr("loaded",true);
+      }
+   });
+}
+
+$(document).ajaxComplete(function(){
+	
+	$('.rating1, .rating2, .rating3, .rating4, .rating5, .rating6, .rating7, .rating8, .rating9, .rating10').unbind('mouseout').mouseout(function(){
+		$(this).siblings(':last').removeClass();
+		$(this).siblings(':last').addClass(currentClass);
+		$(this).siblings('span').html(currentRating);
+		event.stopPropagation();
+	});
+
+	$('.rating1, .rating2, .rating3, .rating4, .rating5, .rating6, .rating7, .rating8, .rating9, .rating10').unbind('mouseover').mouseover(function(){
+		
+		currentRating = $(this).siblings(':first').html();
+		currentClass = "rate" + currentRating;
+
+		var rating = $(this).attr('class');
+		var value = rating.substring(6);
+
+		$(this).siblings(':last').removeClass();
+		$(this).siblings(':last').addClass('rate'+value);
+		$(this).siblings('span').html(value);
+		event.stopPropagation();
+	});
+	
+		<? if($this -> session -> userdata('account_id') !== FALSE) { ?>
+		
+		$('.rating1, .rating2, .rating3, .rating4, .rating5, .rating6, .rating7, .rating8, .rating9, .rating10').unbind('click').click(function(){
+		var rating = $(this).attr('class');
+		var value = rating.substring(6);
+		var idtag = $(this).parent().attr('id');
+		var listing_id = idtag.substring(7);
+		$(this).siblings(':last').removeClass();
+		currentRating = value;
+		currentClass = "rate"+value;
+		$(this).siblings(':last').addClass(currentClass);
+		$(this).siblings('span').html(currentRating);
+		$.ajax({
+			url: 'index.php/rating/add',
+			type: "GET",
+			data: {id: listing_id, val: value},
+			success:function(response){
+			},
+				error:function (xhr, textStatus, thrownError){
+				alert("xhr status: " + xhr.statusText);
+			},
+		});
+		event.stopPropagation();
+	});
+	
+	$('.favorite_icon').unbind('click').click(function(event) {
+		event.preventDefault();
+		var href = $(this).attr("href");
+		var linkTo = href.substring(1);
+		$this_icon= $(this);
+		$this_icon.toggleClass("selected");
+		$.ajax({
+			url: '<?=site_url('favorite/add') ?>',
+			type: "GET",
+			data: {id:linkTo},
+			success:function(response){
+				
+			},
+			error:function (xhr, textStatus, thrownError){
+				alert("xhr status: " + xhr.statusText);
+			},
+		});
+	});
+	<? }else{?>
+		
+		$('.rating1, .rating2, .rating3, .rating4, .rating5, .rating6, .rating7, .rating8, .rating9, .rating10, .favorite_icon, .checkin').bind('click',function(){
+		$.fancybox({
+			height :150,
+				width: 500,
+				autoSize: false,
+				wrapCSS    : 'daleelak_modal',
+				closeClick : true,
+				href: '#modal',
+				helpers : {
+					title : {
+						type : 'inside'
+					}
+				}
+		});
+		
+		 return false;
+		});
+		$('.rating1, .rating2, .rating3, .rating4, .rating5, .rating6, .rating7, .rating8, .rating9, .rating10').click(function(){
+			var rating = $(this).attr('class');
+			var value = rating.substring(6);
+			
+			var listing = $(this).parent().attr('id');
+			listing = listing.substring(7);
+			
+			$.ajax({
+				url: '<?=site_url('rating/session2') ?>
+				',
+				type: "GET",
+				data: {value: value, listing: listing},
+				success:function(response){
+					console.log(response);
+				},
+				error:function (xhr, textStatus, thrownError){
+					alert("xhr status: " + xhr.statusText);
+				},
+			});
+		});	
+		<? } ?>
+})
+</script>
